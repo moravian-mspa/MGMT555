@@ -1,0 +1,143 @@
+---
+title: "Simple Linear Regression in RStudio"
+output:
+  html_document:
+    df_print: paged
+---
+
+Before beginning to read this tutorial, be sure to have read Chapter 3 in the Lilja text.
+
+## The Setup
+
+The HR manager of a local construction company is assisting the manager of the purchasing department with the decision to ask the CEO to create a new clerical position. Part of the clerk's job will be to process invoices from vendors on a daily basis. The purchasing manager doesn't know, however, how much time will be needed each day for that task. 
+
+The purchasing manager has 60 days of data showing the number of invoices processed each of those days and the amount of time in hours needed to process the invoices. The HR manager suggests that they apply simple linear regression to predict the amount of time that will be needed each day to process invoices.  Your team estimates that there will be approximately 150 invoices per day going forward.
+
+The HR manager contacts you and passes on the request and the data. What do you do and what do your results mean?
+
+## Tasks
+
+a.  Set up a scatter plot to review the distribution of data. Does it look like the data is linear?
+b.  Generate the model. What are the regression coefficients (m and b)? Write the model you found.
+d.  Evaluate the regression for fit (Rsquare, ANOVA, F-statistic). Is the model a good fit for the data?
+c.  Check to make sure all the assumptions for linear regression are met.
+e.  If the equation is a good fit for the data, what is your prediction for the amount of time needed daily to process invoices assuming 150 invoices per day?
+
+
+
+
+## The process
+
+As always, I'll begin by loading our standard helper library
+```{r}
+library(tidyverse)
+```
+
+Now let's read the data from the given data file.  Use the Files tab, navigate to the where you downloaded the file and click it to import.  You can look at the data in the tab that pops up.  I'll use `head` here to display the first few rows.  I'll also `attach` the data set for convenience.
+```{r echo = FALSE, message=FALSE}
+InvoiceHours <- read_csv("InvoiceHours.csv")
+```
+```{r}
+attach(InvoiceHours)
+head(InvoiceHours)
+```
+
+This looks like every row is one day, and each column is one variable.  That's the format we want.
+
+## Make a Scatterplot
+A good first step is to look at a scatter plot and decide if the relationship looks at all linear.  Note I added a nice title to the plot
+```{r}
+plot(Hours ~ Invoices_Processed, main="Time vs Invoices Processed")
+```
+
+The plot is somewhat linear with no obvious curved pattern, so it makes sense to try and use a linear model.  
+
+## Generate the model
+Let's move on to generating the linear regression model.  The first line will generate a linear model with Hours as the dependent variable (y), and Invoices_Processed as the predictor variable (x).  The second line prints a summary of the model.
+```{r}
+InvoiceHours_lm <- lm(Hours ~ Invoices_Processed)
+summary(InvoiceHours_lm)
+```
+
+The last line, the F-statistic, shows a very small p-value, so we have very strong evidence that the coefficient on `Invoices_Processed` should not be 0 -- in other words, strong evidence there is a linear relationship.
+
+The second to last line gives us an $r^2$ of 0.4922 indicating that approximately 50% of the variation in time is explained by the number of invoices to be processed.  This is a moderately strong relationship.
+
+Those last two paragraphs taken together tell me we have very strong evidence the relationship exists, but it is only a moderate relationship.  We will need to tell the manager that there are likely other factors that influence the amount of time needed.
+
+The model is `time = 1.013339 + 0.007715 * invoices.`
+
+If you'd like a plot with the best fit line you can execute these next two lines in the same code block.
+```{r}
+plot(Hours ~ Invoices_Processed, main="Time vs Invoices Processed")
+abline(InvoiceHours_lm)
+```
+
+
+## Residual Analysis
+
+Before we confidently use this model however, let's check all our requirements:
+
+1. The relationship is linear
+2. The errors are independent
+3. The errors at each predictor value are normally distributed
+4. The errors have equal variance across predictors (homoscedasticity)
+
+We'll check these by analyzing the residuals from the model.
+
+### Residual vs Fitted Plot for #1 and #4
+We will do a residual vs fitted values plot.  We would like to see a scatter plot with no systematic pattern to the plot (to verify #1) and we would like to see a consistent spread (to verify #4).
+```{r}
+plot(fitted(InvoiceHours_lm), resid(InvoiceHours_lm), main="Residual vs Fitted Values")
+```
+
+Looking across the plot we see the average is close to 0 and no excessively outlying points.  I don't see a clear pattern either.  So #1 is satisfied.  The vertical spread of the data is consistent across the plot, so that supports #4.  This is good.
+
+If we had seen a clear pattern to the data that would indicate something other than this linear relationship is affecting Hours and we should try to identify that other variable.  
+
+
+### Residual vs Order plot for #2
+**This plot is only useful when we know the order the data was collected.**  We can only do this if the data was collected in a specific order.  If not then we don't check #2.
+
+To plot the residuals vs order, we will use the `Day` column.
+```{r}
+plot(Day, resid(InvoiceHours_lm), main="Residual vs Order")
+```
+
+Since there is no clear pattern to the residuals we can conclude the errors are independent and #2 is satidfied.
+
+If a residual vs order plot shows a strong pattern we would have to conclude that time has an impact on the hours needed so we should add that as a predictor to our model.
+
+
+
+### Normal Quantile Plot for #3
+To check that the residuals are normally distributed (#3) we can use [a normal quantile plot](https://newonlinecourses.science.psu.edu/stat501/node/281/).  The commands below produce the normal quantile plot for the residuals along with a reference line.  We hope the points are close to the reference line.
+```{r}
+qqnorm(InvoiceHours_lm$residuals)
+qqline(InvoiceHours_lm$residuals)
+```
+
+This normal probability plot is quite good, so #3 is satisfied.
+
+
+
+
+
+
+Overall we can use this model, but should expect some uncertainty with our predictions since our $r^2$ indicates this one predictor does not perfectly explain the variation in hours.
+
+## Make our prediction
+Your team told us to expect 150 invoices per day going forward, so we need to see what our model says when `Invoices` = 150.  Recall the model was `time = 1.013339 + 0.007715 * Invoices`.  The code below computes our answer.
+```{r}
+1.013339 + 0.007715 * 150
+```
+
+So our best estimate is about 2.17 hours per day.
+
+In relaying this estimate we should note that we expect a lot of variability in that number.  Remember, $r^2$ was only about 0.5, so only 50% of the variation in time needed is explained by the number of invoices.  Presumably there are other factors at play and if a better model is needed we should identify what else would affect time.
+
+
+## A final note
+What you are seeing here is a very technical document.  You would likely not give something like this to your manager or client.  Instead you would write something more like the last paragraph above.  **HOWEVER** it is vital that you do all this technical work on your own.  You cannot give an honest interpretation of how reliable the model will be without checking the assumptions through residual analysis, and thinking about the overall significance of the model, and evaluating $r^2$.
+
+So this type of technical evaluation absolutely must be done, even if it doesn't end up in your final report.
