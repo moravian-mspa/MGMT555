@@ -9,19 +9,21 @@ Before beginning to read this tutorial, be sure to have read Chapter 3 in the Li
 
 ## The Setup
 
-The HR manager of a local construction company is assisting the manager of the purchasing department with the decision to ask the CEO to create a new clerical position. Part of the clerk's job will be to process invoices from vendors on a daily basis. The purchasing manager doesn't know, however, how much time will be needed each day for that task. 
+The HR manager of a local construction company is assisting the purchasing department manager with a decision. They wish to ask the CEO of they would create a new clerical position that will assist with daily processing of invoices from vendors. The purchasing manager doesn't know, however, how much time will be needed each day for that task. 
 
-The purchasing manager has 60 days of data showing the number of invoices processed each of those days and the amount of time in hours needed to process the invoices. The HR manager suggests that they apply simple linear regression to predict the amount of time that will be needed each day to process invoices.  Your team estimates that there will be approximately 150 invoices per day going forward.
+The purchasing manager has 60 days of data showing both the number of daily invoices processed, and the amount of time in hours needed to process said invoices. The HR manager suggests that they apply simple linear regression to predict the amount of time that will be needed each day to process invoices.  
 
-The HR manager contacts you and passes on the request and the data. What do you do and what do your results mean?
+Your team estimates that there will be approximately 150 invoices per day going forward.
+
+The HR manager passes on the request and the data to you. What do you do first, and what will your results mean?
 
 ## Tasks
 
-a.  Set up a scatter plot to review the distribution of data. Does it look like the data is linear?
-b.  Generate the model. What are the regression coefficients (m and b)? Write the model you found.
-d.  Evaluate the regression for fit (Rsquare, ANOVA, F-statistic). Is the model a good fit for the data?
-c.  Check to make sure all the assumptions for linear regression are met.
-e.  If the equation is a good fit for the data, what is your prediction for the amount of time needed daily to process invoices assuming 150 invoices per day?
+a.  Set up a scatter plot: Review the distribution of data and pay close attention to see if the data may be linear?
+b.  Generate the model: What are the regression coefficients (m and b)? Write the model you found.
+d.  Evaluate the regression for fit (Rsquare, ANOVA, F-statistic): Is the model a good fit for the data?
+c.  Check: Make sure all the assumptions for linear regression are met.
+e.  Hypothesize: If the equation is a good fit for the data, what is your prediction for the amount of time needed daily to process invoices assuming 150 invoices per day?
 
 
 
@@ -59,7 +61,7 @@ InvoiceHours_lm <- lm(Hours ~ Invoices_Processed)
 summary(InvoiceHours_lm)
 ```
 
-The last line, the F-statistic, shows a very small p-value, so we have very strong evidence that the coefficient on `Invoices_Processed` should not be 0 -- in other words, strong evidence there is a linear relationship.
+The last line, the F-statistic, shows a very small p-value, so we have very strong evidence that the coefficient on `Invoices_Processed` should not be 0. In other words, we have strong evidence there is a linear relationship!
 
 The second to last line gives us an $r^2$ of 0.4922 indicating that approximately 50% of the variation in time is explained by the number of invoices to be processed.  This is a moderately strong relationship.
 
@@ -67,7 +69,7 @@ Those last two paragraphs taken together tell me we have very strong evidence th
 
 The model is `time = 1.013339 + 0.007715 * invoices.`
 
-If you'd like a plot with the best fit line you can execute these next two lines in the same code block.
+If you'd like a plot with the 'best fit' line you can execute these next two lines in the same code block.
 ```{r}
 plot(Hours ~ Invoices_Processed, main="Time vs Invoices Processed")
 abline(InvoiceHours_lm)
@@ -91,7 +93,7 @@ We will do a residual vs fitted values plot.  We would like to see a scatter plo
 plot(fitted(InvoiceHours_lm), resid(InvoiceHours_lm), main="Residual vs Fitted Values")
 ```
 
-Looking across the plot we see the average is close to 0 and no excessively outlying points.  I don't see a clear pattern either.  So #1 is satisfied.  The vertical spread of the data is consistent across the plot, so that supports #4.  This is good.
+Looking across the plot we see the average is close to 0 and no excessively outlying points.  A clear pattern is not evident.  So #1 is satisfied.  The vertical spread of the data is consistent across the plot, so that supports #4.  This is good!
 
 If we had seen a clear pattern to the data that would indicate something other than this linear relationship is affecting Hours and we should try to identify that other variable.  
 
@@ -99,15 +101,14 @@ If we had seen a clear pattern to the data that would indicate something other t
 ### Residual vs Order plot for #2
 **This plot is only useful when we know the order the data was collected.**  We can only do this if the data was collected in a specific order.  If not then we don't check #2.
 
-To plot the residuals vs order, we will use the `Day` column.
+To plot the residuals vs. order, we will use the `Day` column.
 ```{r}
 plot(Day, resid(InvoiceHours_lm), main="Residual vs Order")
 ```
 
-Since there is no clear pattern to the residuals we can conclude the errors are independent and #2 is satidfied.
+Since there is no clear pattern to the residuals we can conclude the errors are independent and #2 is satisfied.
 
-If a residual vs order plot shows a strong pattern we would have to conclude that time has an impact on the hours needed so we should add that as a predictor to our model.
-
+If a residual vs. order plot shows a strong pattern we would have to conclude that time has an impact on the hours needed, so we should add that as a predictor to our model.
 
 
 ### Normal Quantile Plot for #3
@@ -120,10 +121,6 @@ qqline(InvoiceHours_lm$residuals)
 This normal probability plot is quite good, so #3 is satisfied.
 
 
-
-
-
-
 Overall we can use this model, but should expect some uncertainty with our predictions since our $r^2$ indicates this one predictor does not perfectly explain the variation in hours.
 
 ## Make our prediction
@@ -134,10 +131,12 @@ Your team told us to expect 150 invoices per day going forward, so we need to se
 
 So our best estimate is about 2.17 hours per day.
 
-In relaying this estimate we should note that we expect a lot of variability in that number.  Remember, $r^2$ was only about 0.5, so only 50% of the variation in time needed is explained by the number of invoices.  Presumably there are other factors at play and if a better model is needed we should identify what else would affect time.
+In relaying this estimate we should note that we expect a lot of variance in that number.  Remember, $r^2$ was only about 0.5, so only 50% of the variation in time needed is explained by the number of invoices.  Presumably there are other factors at play and if a better model is needed we should identify what else would affect time.
 
 
 ## A final note
-What you are seeing here is a very technical document.  You would likely not give something like this to your manager or client.  Instead you would write something more like the last paragraph above.  **HOWEVER** it is vital that you do all this technical work on your own.  You cannot give an honest interpretation of how reliable the model will be without checking the assumptions through residual analysis, and thinking about the overall significance of the model, and evaluating $r^2$.
+What you are seeing here is a very technical document.  You would likely not give something like this to your manager or client.  Instead you would write something more like the last paragraph above.  
 
-So this type of technical evaluation absolutely must be done, even if it doesn't end up in your final report.
+**HOWEVER** it is vital that you do all this technical work on your own.  You cannot give an honest interpretation of how reliable the model will be without checking the assumptions through residual analysis, thinking about the overall significance of the model, and evaluating $r^2$.
+
+So this type of technical evaluation is critical, and mandatory, even if it doesn't end up in your final report.

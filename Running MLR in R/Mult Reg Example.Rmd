@@ -12,7 +12,7 @@ library(tidyverse)
 
 We have data from a hypothetical company's advertising spending and sales for the last three years.  The variables are `TV`, `Radio`, and `Newspaper` which are the amount spent on the respective ads in thousands of dollars.  The final variable is `Sales` which is that month's sales in units.
 
-Download the data from Canvas and import it to RStudio.
+Download the data and import it to RStudio. ( https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/Running%20MLR%20in%20R/Advertising.csv )
 ```{r}
 library(tidyverse)
 Advertising <- read_csv("Advertising.csv");
@@ -25,7 +25,7 @@ We should look at some summary statistics briefly to ensure everything seems rea
 summary(Advertising)
 ```
 
-There do not seem to be any unusual values, though the spread in the TV column is notably large.  Nothing to worry about yet, just something interesting in the data.
+There do not seem to be any unusual values, though, the spread in the TV column is notably large.  This is nothing to worry about just yet, but an interesting component in the dataset. 
 
 
 Let's check to see if the relationships are roughly linear.  This command generates dotplots for each possible combination of the variables.
@@ -45,20 +45,20 @@ model <- lm(Sales ~ TV + Newspaper + Radio);
 summary(model)
 ```
 
-The very last line gives us the overall significance of the model.  It is the result of an ANOVA test to decide if not all coefficients are 0.  Since the p-value is very small, we have strong evidence that at least one of the coefficients should be non zero.  So strong evidence there is a linear relationship here.
+The very last line gives us the overall significance of the model.  It is the result of an ANOVA test which helps to decide if coefficients are not 0.  Since the p-value is very small, we have strong evidence that at least one of the coefficients should be non-zero. Thus, we have strong evidence there is a linear relationship present in the data.
 
-Directly above that we see the $R^2$ and adjusted $R^2$ values.  We will use the adjusted $R^2$ because we are using multiple predictors here.  An adjusted of 0.8956 is quite good.  This means approximately 90% of the variation in `Sales` is explained by this linear relationship to the three factors.
+Directly above that we see the $R^2$ and adjusted $R^2$ values.  We will use the adjusted $R^2$ because we are using multiple predictors.  An adjustment of 0.8956 is quite good, and means approximately 90% of the `Sales` variant is explained by the linear relationship to the three factors.
 
 Consider the "Coefficients" section. There is a separate $t$-test for each coefficient to see how significant it is.  The `Newspaper` variable is the only one whose $p$-value is too large.  We do not have strong evidence that the `Newspaper` coefficient should be non-zero.
 
-Prehaps we should create a model without `Newspaper`.  Notice the code below is very similar to the call above, I have just left out `Newspaper`
+Prehaps we should create a model without `Newspaper`.  Notice the code below is very similar to the call above, it just omits `Newspaper`:
 ```{r}
 model2 <- lm(Sales~TV+Radio, data=Advertising);
 summary(model2)
 ```
 
-This model seems a little better.  All the coefficients are significant, and the model as a whole is still significant.  In fact our adjust $R^2$ has improved slightly.
+This model seems to be progressing!  All the coefficients are significant, and the model as a whole is still significant.  In fact, our adjust $R^2$ has also improved slightly.
 
-We will talk more soon about how to choose the best variables to build your regression models.
+We will talk more about how to choose the best variables to build your regression models.
 
-Also, don't forget that with every statistical procedure there are assumptions that need to be met.  We can't really use either of these models yet because we haven't checked those assumptions.  We'll talk about how to do that soon.
+Also, don't forget that with every statistical procedure there are assumptions that need to be met.  We can't correctly use either of these models yet because we haven't checked those assumptions.  We'll will also discuss about how to do that in subsequent materials.
