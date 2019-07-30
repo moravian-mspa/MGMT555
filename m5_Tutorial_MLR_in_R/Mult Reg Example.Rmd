@@ -12,7 +12,7 @@ library(tidyverse)
 
 We have data from a hypothetical company's advertising spending and sales for the last three years.  The variables are `TV`, `Radio`, and `Newspaper` which are the amount spent on the respective ads in thousands of dollars.  The final variable is `Sales` which is that month's sales in units.
 
-Download the data and import it to RStudio. ( https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/Running%20MLR%20in%20R/Advertising.csv )
+Download the data and import it to RStudio. ( https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m5_Tutorial_MLR_in_R/Advertising.csv )
 ```{r}
 library(tidyverse)
 Advertising <- read_csv("Advertising.csv");
@@ -57,7 +57,7 @@ model2 <- lm(Sales~TV+Radio, data=Advertising);
 summary(model2)
 ```
 
-This model seems to be progressing!  All the coefficients are significant, and the model as a whole is still significant.  In fact, our adjust $R^2$ has also improved slightly.
+This model seems to be progressing!  All the coefficients are significant, and the model as a whole is still significant.  In fact, our adjusted $R^2$ has also improved slightly.
 
 We will talk more about how to choose the best variables to build your regression models.
 

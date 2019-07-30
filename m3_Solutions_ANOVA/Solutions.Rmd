@@ -1,0 +1,105 @@
+---
+title: "ANOVA Practice Solutions"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment=NA, toc=TRUE)
+library(tidyverse)
+```
+
+```{r}
+library(tidyverse)
+```
+
+## 1. Training Program
+
+First I'll import the `TrainingProgram` dataset.  I'll `attach` it so its easy to refer to the columns, then I'll look at the first few rows.
+
+```{r}
+TrainingProgram <- read_csv("TrainingProgram.csv")
+attach(TrainingProgram)
+head(TrainingProgram)
+```
+
+
+
+**Independence** The people were randomly assigned to two training programs, so the samples are independent.
+
+**Normality** We can use boxplots to help us decide if the distributions seem approximately symmetric.
+```{r}
+boxplot(Scores ~ Exam)
+```
+Both seem reasonably symmetric with no outliers, so we can assume they are approximately normal.
+
+**Standard Deviations** remember the `tapply` command
+```{r}
+tapply(Scores, Exam, sd)
+```
+these are fine.
+
+Now run the test.
+```{r}
+myAnalysis <- aov(Scores ~ Exam)
+summary(myAnalysis)
+```
+
+The p-value is rather large, so we do not have evidence that the mean scores are different in the two groups.
+
+
+## Aisle location
+
+Import the dataset, `attach` it, look at the first few rows.
+
+```{r}
+AisleLocation <- read_csv("AisleLocation.csv")
+attach(AisleLocation)
+head(AisleLocation)
+```
+**Independence** Seems a reasonable assumption since subjects were assigned randomly.
+
+**Normality**  Let's check boxplots.
+```{r}
+boxplot(Time ~ Location)
+```
+
+The `Middle` category does not look at all normal.  It is not symmetric and has some outliers.  I don't think the normality assumption is met, so we cannot use the ANOVA test.
+
+I would recommend we collect more data with more subjects if possible.
+
+
+## New Packaging
+Import the dataset, `attach` it, look at the first few rows.
+```{r}
+Packaging <- read_csv("Packaging.csv")
+attach(Packaging)
+head(Packaging)
+```
+
+**Independence** Seems a reasonable assumption since subjects were assigned randomly.
+
+**Normality**  Let's check boxplots.
+```{r}
+boxplot(Rating ~ Design)
+```
+`Old` might have a slight skew, but both are reasonably symmetric, so we are ok with the normality assumption.
+
+**Standard Deviations** 
+```{r}
+tapply(Rating, Design, sd)
+```
+These are fine.
+
+Now run the test
+```{r}
+packageAnalysis <- aov(Rating ~ Design)
+summary(packageAnalysis)
+```
+
+The p-value is less than 0.05, so we have some moderate evidence that there is a difference in the mean values between the two package designs.
+
+
+
+
+
