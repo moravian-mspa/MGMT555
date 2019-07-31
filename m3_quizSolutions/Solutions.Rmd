@@ -1,0 +1,64 @@
+---
+title: "Week 3 Quiz Solutions"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment=NA, toc=TRUE)
+library(tidyverse)
+```
+
+```{r}
+library(tidyverse)
+```
+## Levels of Measurement
+Nothing to compute here, see solutions on Canvas.
+
+## Is the new battery better?
+```{r}
+battery <- read_csv("Batteries.csv")
+attach(battery)
+```
+compute the means and standard deviations:
+```{r}
+print("Means:")
+tapply(usage_time, battery_type, mean)
+print("Standard deviations:")
+tapply(usage_time, battery_type, sd)
+
+```
+
+a boxplot to verify the ANOVA assumptions:
+```{r}
+boxplot(usage_time ~ battery_type)
+```
+
+Finally, the ANOVA results
+```{r}
+summary(aov(usage_time ~ battery_type))
+```
+
+
+
+---------------------
+## Laser printer cost and speed
+
+```{r}
+printers <- read_csv("Printers.csv")
+attach(printers)
+```
+
+First, the scatterplot:
+```{r}
+plot(Price ~ BW_pages_per_minute)
+```
+I see a moderate, positive, linear relationship
+
+The correlation coefficient, $r$:
+```{r}
+cor(Price, BW_pages_per_minute )
+```
+
+This suggests a moderate, positive relationship.  This suggests that there are likely other characteristics that influence price.
+
