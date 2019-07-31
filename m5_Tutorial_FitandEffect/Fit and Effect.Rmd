@@ -88,7 +88,7 @@ Looking at our `R` output above we see there are two $R^2$ statistics given.  Th
 
 **However**, that's not necessarily a good thing.  Remember, the data you have is a sample and our goal is not to create a model that perfectly predicts the sample, but rather one that is useful in predicting what will happen beyond the sample.  A model that perfectly matches the sample data might not be useful at all when looking beyond the sample -- we've too closely modelled the randomness in the data.  This is called 'overfitting the model'.
 
-So we want to try and avoid both too many, and not too few predictor variables.  To balance the tendancy of $R^2$ to increase as we add more variables we use the adjusted-$R^2$.  You saw the formula in your reading, and you will notice the formula takes into account the number of predictors we are using relative to the number of data points we have.
+So we want to try and avoid both too many, and too few predictor variables.  To balance the tendancy of $R^2$ to increase as we add more variables we use the adjusted-$R^2$.  You saw the formula in your reading, and you will notice the formula takes into account the number of predictors we are using relative to the number of data points we have.
 
 Typically we will let `R` compute this for us and in fact for the example above we see an adjusted-$R^2$ of 0.8564 which is smaller than the unadjusted value.
 
