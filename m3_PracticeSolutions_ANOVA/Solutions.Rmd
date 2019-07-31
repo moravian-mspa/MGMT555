@@ -13,7 +13,7 @@ library(tidyverse)
 library(tidyverse)
 ```
 
-## 1. Training Program
+## Training Program
 
 First I'll import the `TrainingProgram` dataset.  I'll `attach` it so its easy to refer to the columns, then I'll look at the first few rows.
 
@@ -23,7 +23,15 @@ attach(TrainingProgram)
 head(TrainingProgram)
 ```
 
+### **1** find mean and sd for each
+```{r}
+print("means:")
+tapply(Scores, Exam, mean)
+print("standard deviations:")
+tapply(Scores, Exam, sd)
+```
 
+### **2** Check assumptions
 
 **Independence** The people were randomly assigned to two training programs, so the samples are independent.
 
@@ -33,19 +41,17 @@ boxplot(Scores ~ Exam)
 ```
 Both seem reasonably symmetric with no outliers, so we can assume they are approximately normal.
 
-**Standard Deviations** remember the `tapply` command
-```{r}
-tapply(Scores, Exam, sd)
-```
-these are fine.
+**Standard Deviations** looking at the standard deviations above, they meet our criteria.
 
+
+### **3** Run the test
 Now run the test.
 ```{r}
 myAnalysis <- aov(Scores ~ Exam)
 summary(myAnalysis)
 ```
 
-The p-value is rather large, so we do not have evidence that the mean scores are different in the two groups.
+The p-value is 0.26 which is rather large, so we do not have evidence that the mean scores are different in the two groups.
 
 
 ## Aisle location
@@ -57,6 +63,17 @@ AisleLocation <- read_csv("AisleLocation.csv")
 attach(AisleLocation)
 head(AisleLocation)
 ```
+
+### **1** find mean and sd for each
+```{r}
+print("means:")
+tapply(Time, Location, mean)
+print("standard deviations:")
+tapply(Time, Location, sd)
+```
+
+### **2** Check assumptions
+
 **Independence** Seems a reasonable assumption since subjects were assigned randomly.
 
 **Normality**  Let's check boxplots.
@@ -69,6 +86,9 @@ The `Middle` category does not look at all normal.  It is not symmetric and has 
 I would recommend we collect more data with more subjects if possible.
 
 
+### **3** I won't run the ANOVA because the assumptions are not met.
+
+
 ## New Packaging
 Import the dataset, `attach` it, look at the first few rows.
 ```{r}
@@ -76,6 +96,16 @@ Packaging <- read_csv("Packaging.csv")
 attach(Packaging)
 head(Packaging)
 ```
+
+### **1** Mean and sd
+```{r}
+print("means:")
+tapply(Rating, Design, mean)
+print("standard deviations:")
+tapply(Rating, Design, sd)
+```
+
+### **2** Check the assumptions
 
 **Independence** Seems a reasonable assumption since subjects were assigned randomly.
 
@@ -86,12 +116,10 @@ boxplot(Rating ~ Design)
 `Old` might have a slight skew, but both are reasonably symmetric, so we are ok with the normality assumption.
 
 **Standard Deviations** 
-```{r}
-tapply(Rating, Design, sd)
-```
-These are fine.
+The standard deviations calculated above are fine.
 
-Now run the test
+
+### **3** Now run the test
 ```{r}
 packageAnalysis <- aov(Rating ~ Design)
 summary(packageAnalysis)
