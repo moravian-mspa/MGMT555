@@ -8,9 +8,9 @@ output:
 knitr::opts_chunk$set(echo = TRUE, comment=NA)
 library(tidyverse)
 ```
+Today we will talk about how to run a multiple linear regression in `R`.
 
-
-We have data from a hypothetical company's advertising spending and sales for the last three years.  The variables are `TV`, `Radio`, and `Newspaper` which are the amount spent on the respective ads in thousands of dollars.  The final variable is `Sales` which is that month's sales in units.
+As an example, we have data from a hypothetical company's advertising spending and sales for the last three years.  The variables are `TV`, `Radio`, and `Newspaper` which are the amount spent on the respective ads in thousands of dollars.  The final variable is `Sales` which is that month's sales in units.
 
 Download the data and import it to RStudio. ( https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m5_Tutorial_MLR_in_R/Advertising.csv )
 ```{r}
@@ -35,19 +35,19 @@ pairs(Advertising)
 
 Note we will ignore the `Month` row and column for now.  If we look at the `Sales` row (the bottom row) we see that `TV` and `Radio` seem to have roughly linear relationships, but `Newspaper` doesn't show much of a pattern. 
 
-Well let's try an initial model with all three variables and see what it looks like. The process for creating the model is very similar to simple linear regression from before.  Notice we put `Sales` first since that is the independent variable.  Next we add all our independent variables, or factors.  This is telling `R` that we would like a model of the form:
+Well let's try an initial model with all three variables and see what it looks like. The process for creating the model is very similar to simple linear regression from before.  Notice we put `Sales` first since that is the dependent variable.  Next we add all our independent variables (also called *factors* or *predictor variables*).  This is telling `R` that we would like a model of the form:
 <center>
 `Sales` = $b_0$ + $b_1$`TV` + $b_2$`Newspaper` + $b_3$`Radio`
 </center>
-The software will attempt to find the coefficients to optimize this model.
+The software will attempt to find the coefficients to minimize the squared residuals similar to the process for simple linear regression.
 ```{r}
 model <- lm(Sales ~ TV + Newspaper + Radio);
 summary(model)
 ```
 
-The very last line gives us the overall significance of the model.  It is the result of an ANOVA test which helps to decide if coefficients are not 0.  Since the p-value is very small, we have strong evidence that at least one of the coefficients should be non-zero. Thus, we have strong evidence there is a linear relationship present in the data.
+The very last line gives us the overall significance of the model.  It is the result of an ANOVA test which helps to decide if we have eveidence that any of the coefficients are non-zero. Since the p-value is very small, we have strong evidence that at least one of the coefficients should be non-zero. Thus, we have strong evidence there is a linear relationship present in the data.
 
-Directly above that we see the $R^2$ and adjusted $R^2$ values.  We will use the adjusted $R^2$ because we are using multiple predictors.  An adjustment of 0.8956 is quite good, and means approximately 90% of the `Sales` variant is explained by the linear relationship to the three factors.
+Directly above that we see the $R^2$ and adjusted $R^2$ values.  We will use the adjusted $R^2$ because we are using multiple predictor variables.  An adjustmented $R^2$ of 0.8956 is quite good, and means approximately 90% of the variation  in `Sales` is explained by the linear relationship to the three factors.
 
 Consider the "Coefficients" section. There is a separate $t$-test for each coefficient to see how significant it is.  The `Newspaper` variable is the only one whose $p$-value is too large.  We do not have strong evidence that the `Newspaper` coefficient should be non-zero.
 
