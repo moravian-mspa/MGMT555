@@ -9,29 +9,28 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, toc=TRUE)
 library(tidyverse)
 ```
 
-Let's talk a little more about evaluating how reliable a linear regression model is.  We will talk about first assessing how well the model fits the data, and then the effect size, or a measure of how much the model accounts for variability in the data.
+So, how reliable is a linear regression model? Let's evaluate. We will first look at how well the model fits the data, and then the effect size (a measure of how much the model accounts for variability in the data).
 
 
 ## Assessing Fit
 
-When it comes to evaluating the fit of a linear model there are two questions we consider:
+When it comes to evaluating the fit of a linear model, there are two questions we consider:
 
-
-1. **Is there evidence that at least one coefficient that is not 0?**
+1. **Is there evidence of at least one non-zero (0) coefficient?**
 That is, is there evidence that at least one predictor is useful in the model?
 To do this, we use an ANOVA test with the hypotheses:  
 $H_0$: all coefficients are 0  
 $H_a$: at least one coefficient is non-zero  
-If we fail to reject the null hypothesis then we do not have evidence that this model is useful in predicting the data.
+If we fail to reject the null hypothesis, then we do not have evidence that this model is useful in predicting the data.
 
-2. **Is there evidence that each individual coefficient is not 0?**
+2. **Is there also evidence that each individual coefficient is non-zero?**
 For each variable we use a $t$-test for significance when all other variables are taken into account.  The hypotheses are:   
 $H_0$: this coefficient is 0  
 $H_a$: this coefficient is not 0  
 If we fail to reject the null hypothesis, then we do not have evidence that this variable is useful to the model.
 
 
-Let's revisit the advertising data.  Recall we have data from a hypothetical company's advertising spending and sales for the last three years.  The variables are `TV`, `Radio`, and `Newspaper` which are the amount spent on the respective ads in thousands of dollars.  The final variable is `Sales` which is that month's sales in units.
+Let's revisit the advertising data.  Recall, we have data from a hypothetical company's advertising spending and sales for the last three years.  The variables are `TV`, `Radio`, and `Newspaper` which are the amount spent on the respective ads in thousands of dollars.  The final variable is `Sales` which is that month's sales in units.
 
 Download the data and import it to RStudio. ( https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m5_Tutorial_FitandEffect/Advertising.csv )
 ```{r}
@@ -53,7 +52,7 @@ summary(model)
 
 Remember our two questions above:
 
-1. **Is there evidence that at least one coefficient is not 0?**
+1. **Is there evidence of at least one non-zero (0) coefficient?**
 
 In this case then, our hypotheses are  
 $H_0: b_0=b_1=b_2=b_3=0$  
@@ -63,7 +62,7 @@ You may recall from our review of ANOVA at the beginning of the course that thos
 
 
 
-2. **Is there evidence that each individual coefficient is not 0?**
+2. **Is there also evidence that each individual coefficient is non-zero?**
 
 We will have a set of hypotheses for each coefficient.  That is, for $i=0,1,2,3$:  
 $H_0: b_i=0$  
@@ -85,9 +84,11 @@ Next we consider the effect size.  The statistic we use to measure this is the c
 
 Recall, $R^2$ tells us the proportion of variation in the response variable explained by the linear relationship to the predictor variables.  So it quantifies how well the model explains what is happening with the response variable.
 
-Looking at our `R` output above we see there are two $R^2$ statistics given.  The problem with $R^2$ is that adding more variables will always cause it to increase.  If we add more degrees of freedom to our model, more "wiggle room" if you will, then we can always make our model approximate the data more closely.  In fact, potentially, if we add enough variables we will perfectly match the data. **However**, that's not necessarily a good thing.  Remember, the data you have is a sample and our goal is not to create a model that perfectly predicts the sample, but rather one that is useful in predicting what will happen beyond the sample.  A model that perfectly matches the sample data might not be useful at all when looking beyond the sample -- we've too closely modelled the randomness in the data.  This is called overfitting the model.
+Looking at our `R` output above we see there are two $R^2$ statistics given.  The problem with $R^2$ is that adding more variables will always cause it to increase.  If we add more degrees of freedom to our model, more "wiggle room" if you will, then we can always make our model approximate the data more closely.  In fact, potentially, if we add enough variables we will match the data perfectyl!
 
-So we want not too many, and not too few predictor variables.  To balance the tendancy of $R^2$ to increase as we add more variables we use the adjusted-$R^2$.  You saw the formula in your reading and hopefully you noticed the formula takes into account the number of predictors we are using relative to the number of data points we have.
+**However**, that's not necessarily a good thing.  Remember, the data you have is a sample and our goal is not to create a model that perfectly predicts the sample, but rather one that is useful in predicting what will happen beyond the sample.  A model that perfectly matches the sample data might not be useful at all when looking beyond the sample -- we've too closely modelled the randomness in the data.  This is called 'overfitting the model'.
+
+So we want to try and avoid both too many, and not too few predictor variables.  To balance the tendancy of $R^2$ to increase as we add more variables we use the adjusted-$R^2$.  You saw the formula in your reading, and you will notice the formula takes into account the number of predictors we are using relative to the number of data points we have.
 
 Typically we will let `R` compute this for us and in fact for the example above we see an adjusted-$R^2$ of 0.8564 which is smaller than the unadjusted value.
 
@@ -102,12 +103,14 @@ Low $R^2$ values essentially mean there are things happening with our response v
 To summarize the ideas here:
 
 * Low $R^2$: If any predictor variables are significant we can still use their coefficients to help us understand how quickly the response variable responds to changes in those variables.  However, any predictions the model makes will be suspect.
+
 * High $R^2$: great!  We can use the coefficients on any signifcant predictor variables as above, **and** we can use our model to make predictions.
 
 For our example above, where we had adjusted-$R^2$ of 0.8564, this is a relatively large $R^2$, so I would use this model to make predictions.  However, since we saw that `Newspaper` is not significant, we could likely improve our model by removing it.  We'll talk more about that idea soon.
 
 ## One Last Example
-Let's consider one more example and assess the model's fit and effect size.
+Let's consider one more example and assess the model's fit and effect size. 
+
 We have data from 2014 housing sales in King County, WA, USA^[Harlfoxem. (2016). *House Sales in King County, USA, Version 1* [Data file]. Retrieved from https://www.kaggle.com/harlfoxem/housesalesprediction/downloads/housesalesprediction.zip/1].  Three of the variables are sale price (`price`), square feet of living space (`sqft_living`), and the size of the lot (`sqft_lot`).  
 
 
@@ -125,12 +128,12 @@ We will create a multiple regression model to predict `price` from the other two
 summary(lm(price ~ sqft_lot + sqft_living , data = HouseSales))
 ```
 
-1. **Is there evidence that at least one coefficient that is not 0?**
+1. **Is there evidence that at least one coefficient is non-zero (0)?**
 
 Yes!  The p-value for the model overall is $2.2\times 10^{-16}$ which is quite small.  We have very strong evidence the model is significant.
 
 
-2. **Is there evidence that each individual coefficient is not 0?**
+2. **Is there evidence that each individual coefficient is non-zero (0)?**
 
 Each variable is significant.  All p-values are quite small, so we have strong evidence in favor of using all variables.
 
@@ -140,4 +143,3 @@ The adjusted $R^2$ for the model is 0.4938.  This indicates that less than 50% o
 
 * For every additional 1 square foot of living space we expect the house price to increase by $283.
 * For every additional 1 square foot of lot size we expect the house price to *decrease* by $0.29. 
-
