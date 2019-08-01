@@ -1,0 +1,176 @@
+---
+title: "Linear Regression Practice Solutions"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment=NA, toc=TRUE)
+library(tidyverse)
+```
+
+## Part 1, Predict Water Use
+```{r}
+mydata <- read_csv("water.csv")
+attach(mydata)
+head(mydata)
+```
+
+```{r}
+plot(mydata)
+```
+
+I see some linear association in the plot.
+
+Create the model
+```{r}
+mydata_lm <- lm(Water ~ Production)
+summary(mydata_lm)
+```
+
+### Assess the Model
+
+The F-statistic has a very small p-value indicating a significant relationship.  The $R^2$ value is only moderate indicating about 40% of variability in water use is explained by this model.  There are likely other variables that should be considered.
+
+Now we need to check:
+
+1. The relationship is linear
+2. The errors are independent
+3. The errors at each predictor value are normally distributed
+4. The errors have equal variance across predictors (homoscedasticity)
+
+
+We'll start with the residual vs fitted plot
+```{r}
+plot(fitted(mydata_lm), resid(mydata_lm), main =  "Residuals vs Fitted values")
+```
+
+There is no pattern, so #1 is ok. When considering #4, I notivce that the variability seems to change slightly across the plot, however there are not that many observations, so I don't think there is enough here to be concerned about violating #4.  I will proceed cautiously.
+
+For #2, we are told the manager randomly selected days, so it is reasonable to conclude the data will be independent.
+
+Finally a normal quantile plot for #3:
+```{r}
+qqnorm(mydata_lm$residuals)
+qqline(mydata_lm$residuals)
+```
+
+This looks quite good, so #3 is satisfied.
+
+### Summary
+
+The model satisfies all assumptions, though we are slightly concerned about heteroscedacity. The F-statistic indicates this model is significant.  The model is:
+
+`Water` = 2,273 + 0.07989 `Production`
+
+
+-------------------------------------
+
+
+## Part 2, LinearReg1 Data Set
+
+
+```{r}
+mydata <- read_csv("LinearReg1.csv")
+attach(mydata)
+head(mydata)
+```
+```{r}
+plot(mydata)
+```
+
+Create the model
+```{r}
+mydata_lm <- lm(y ~ x)
+summary(mydata_lm)
+```
+
+### Assess the Model
+
+The F-statistic has a very small p-value indicating a significant relationship.  The $R^2$ value is fairly high indicating 67% of variability in y is explained by this model.
+
+We need to check:
+
+1. The relationship is linear
+2. The errors are independent
+3. The errors at each predictor value are normally distributed
+4. The errors have equal variance across predictors (homoscedasticity)
+
+
+We'll start with the residual vs fitted plot
+```{r}
+plot(fitted(mydata_lm), resid(mydata_lm), main =  "Residuals vs Fitted values")
+```
+
+There is no pattern, so #1 is ok, and the variability looks uniform so #4 is ok.
+
+We are not really told anything about this data, so we cannot check #2.  Since this is an artificial situation we will need to assume the data were obtained randomly and are independent.
+
+Finally a normal quantile plot for #3:
+```{r}
+qqnorm(mydata_lm$residuals)
+qqline(mydata_lm$residuals)
+```
+
+This looks quite good, so #3 is satisfied.
+
+### Summary
+
+The model satisfies all assumptions and the F-statistic indicates it is significant.  The model is:
+
+y = 69.19987 + 1.94857 x
+
+
+-------------------------------------
+
+
+
+## Part 3, LinReg2 data set
+
+```{r}
+mydata <- read_csv("LinearReg2.csv")
+attach(mydata)
+head(mydata)
+```
+```{r}
+plot(mydata)
+```
+
+This dot plot does not look linear.  There really isn't much of a pattern at all.
+
+Create the model
+```{r}
+mydata_lm <- lm(y ~ x)
+summary(mydata_lm)
+```
+
+### Assess the Model
+
+The F-statistic has a large p-value indicating this model is not significant.  The $R^2$ value is very low indicating essentially none of variability in y is explained by this model.
+
+We need to check:
+
+1. The relationship is linear
+2. The errors are independent
+3. The errors at each predictor value are normally distributed
+4. The errors have equal variance across predictors (homoscedasticity)
+
+
+We'll start with the residual plot.
+```{r}
+plot(fitted(mydata_lm), resid(mydata_lm))
+```
+
+There is no real pattern, so #1 is ok, however the variability changes drastically as we move left to right, so #4 is not satisfied.
+
+We are not really told anything about this data, so we cannot check #2.
+
+Finally a normal quantile plot for #3:
+```{r}
+qqnorm(mydata_lm$residuals)
+qqline(mydata_lm$residuals)
+```
+
+This is not a very good normal quantile plot.  The points leave the line significantly at either end, so the assumption of normally distributed errors is in doubt.
+
+### Summary
+
+We cannot use this model.  It does not satisfy all assumptions of the linear regression procedure, and even if it did, the F-statistic indicates the relationship is not significant.  If there is a relationship between these variables it is likely not linear.  
