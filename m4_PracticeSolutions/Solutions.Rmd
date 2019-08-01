@@ -43,7 +43,7 @@ We'll start with the residual vs fitted plot
 plot(fitted(mydata_lm), resid(mydata_lm), main =  "Residuals vs Fitted values")
 ```
 
-There is no pattern, so #1 is ok. When considering #4, I notivce that the variability seems to change slightly across the plot, however there are not that many observations, so I don't think there is enough here to be concerned about violating #4.  I will proceed cautiously.
+There is no pattern, so #1 is ok. When considering #4, I notice that the variability seems to change slightly across the plot, however there are not that many observations, so I don't think there is enough here to be concerned about violating #4.  I will proceed cautiously.
 
 For #2, we are told the manager randomly selected days, so it is reasonable to conclude the data will be independent.
 
@@ -53,7 +53,7 @@ qqnorm(mydata_lm$residuals)
 qqline(mydata_lm$residuals)
 ```
 
-This looks quite good, so #3 is satisfied.
+This plot indicates some skewing at the low end, but overall looks quite good, so #3 is satisfied.
 
 ### Summary
 
