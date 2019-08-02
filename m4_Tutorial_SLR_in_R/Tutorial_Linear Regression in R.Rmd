@@ -13,7 +13,7 @@ Before beginning to read this tutorial, be sure to have read Chapter 3 in the Li
 
 ## The Setup
 
-An antique dealer who specializes in antique clocks would like to predict how much some of the clocks in her inventory will sell for at auction. She collects data from 32 grandfater clocks that have sold recently and would like to use the data to create a model for selling price. The data can be found in `auction.csv`^[Mendenhall, W, and Sincich, TL (1993). Selling Price of Antique Grandfather Clocks [Data File]. Accessed at http://www.statsci.org/data/general/auction.txt].
+An antique dealer who specializes in antique clocks would like to predict how much some of the clocks in her inventory will sell for at auction. She collects recent sales data from 32 grandfater clocks and would like to use the data to create a model for determining a selling price. The data can be found in `auction.csv`^[Mendenhall, W, and Sincich, TL (1993). Selling Price of Antique Grandfather Clocks [Data File]. Accessed at http://www.statsci.org/data/general/auction.txt].
 
 Let's try to help the dealer create a model.
 
@@ -45,7 +45,7 @@ head(auction)
 This looks like every row is one day, and each column is one variable.  That's the format we want.  The variables we want in particular are called `Age` and `Price`.
 
 ## Make a Scatterplot
-A good first step is to look at a scatter plot and decide if the relationship looks at all linear.  Note I added a nice title to the plot
+A good first step is to look at a scatter plot and decide if the relationship looks in any way linear.  Note the nice title added to the plot:
 ```{r}
 plot(Price ~ Age, main="Auction Price vs Clock Age")
 ```
@@ -59,7 +59,7 @@ auction_lm <- lm(Price ~ Age)
 summary(auction_lm)
 ```
 
-The last line, the F-statistic, shows a very small p-value, so we have very strong evidence that the coefficient on `Invoices_Processed` should not be 0. In other words, we have strong evidence there is a linear relationship!
+The last F-statistic line shows a very small p-value, so we have very strong evidence that the coefficient on `Invoices_Processed` should not be 0. In other words, we have strong evidence there is a linear relationship!
 
 The second to last line gives us an $R^2$ of 0.5332 indicating that approximately 53% of the variation in time is explained by the number of invoices to be processed.  This is a moderately strong relationship.
 
@@ -91,13 +91,13 @@ We will do a residual vs fitted values plot. Remember, a residual is the error w
 plot(fitted(auction_lm), resid(auction_lm), main="Residual vs Fitted Values")
 ```
 
-Looking across the plot we see the average is close to 0 and no excessively outlying points.  A clear pattern is not evident.  So #1 is satisfied.  The vertical spread of the data is perhaps a little less on the left hand side, but not enough to worry about, so that supports #4.  This is good!
+Looking across the plot we see the average is close to 0, and we don't see any excessive outlying points.  A clear pattern is not evident, so #1 is satisfied.  The vertical spread of the data is perhaps a little less on the left hand side, but not enough to worry about, so that supports #4.  This is good!
 
 If we had seen a clear pattern to the data that would indicate the relationship is likely not linear and we would need to try other methods.  
 
 
 ### Checking #2
-Here we need to ask ourselves if it is reasonable to assume the data are independent. Presumably the data come from sales of unrelated clocks, so this assumption is met.
+We need to ask ourselves if the data is reasonabley independent. Presumably the data come from sales of unrelated clocks, so this assumption is met.
 
 
 ### Normal Quantile Plot for #3
