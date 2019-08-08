@@ -1,0 +1,19 @@
+---
+title: "Module 5 Practice: Interpreting the output of MLR"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+
+## Part 1, the water data
+```{r}
+read_csv("water.csv")
+```
+
