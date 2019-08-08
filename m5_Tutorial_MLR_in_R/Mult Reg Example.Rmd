@@ -35,7 +35,7 @@ pairs(Advertising)
 
 Note we will ignore the `Month` row and column for now.  If we look at the `Sales` row (the bottom row) we see that `TV` and `Radio` seem to have roughly linear relationships, but `Newspaper` doesn't show much of a pattern. 
 
-Well let's try an initial model with all three variables and see what it looks like. The process for creating the model is very similar to simple linear regression from before.  Notice we put `Sales` first since that is the dependent variable.  Next we add all our independent variables (also called *factors* or *predictor variables*).  This is telling `R` that we would like a model of the form:
+Well let's try an initial model with all three predictor variables and see what it looks like. The process for creating the model is very similar to simple linear regression from before.  Notice we put `Sales` first since that is the dependent variable.  Next we add all our independent variables (also called *factors* or *predictor variables*).  This is telling `R` that we would like a model of the form:
 <center>
 `Sales` = $b_0$ + $b_1$`TV` + $b_2$`Newspaper` + $b_3$`Radio`
 </center>
