@@ -5,7 +5,10 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment=NA, toc=TRUE)
 library(tidyverse)
+library(car)
 ```
+
+
 
 ## Part 1, Predict Water Use
 ```{r}
@@ -51,6 +54,7 @@ Finally a normal quantile plot for #3:
 ```{r}
 qqnorm(mydata_lm$residuals)
 qqline(mydata_lm$residuals)
+qqPlot(resid(mydata_lm))
 ```
 
 This plot indicates some skewing at the low end, but overall looks quite good, so #3 is satisfied.
@@ -165,8 +169,10 @@ We are not really told anything about this data, so we cannot check #2.
 
 Finally a normal quantile plot for #3:
 ```{r}
+library(car)
 qqnorm(mydata_lm$residuals)
 qqline(mydata_lm$residuals)
+qqPlot(resid(mydata_lm))
 ```
 
 This is not a very good normal quantile plot.  The points leave the line significantly at either end, so the assumption of normally distributed errors is in doubt.
