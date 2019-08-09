@@ -1,1 +1,1 @@
-synthetic data
+Harlfoxem. (2016). House Sales in King County, USA, Version 1 [Data file]. Retrieved from https://www.kaggle.com/harlfoxem/housesalesprediction/downloads/housesalesprediction.zip/1
