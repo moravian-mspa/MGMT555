@@ -1,0 +1,3 @@
+Gasoline vehicles only
+
+EPA (2019). Fuel Economy Data Set [Data File]. Accessed at https://www.fueleconomy.gov/feg/download.shtml

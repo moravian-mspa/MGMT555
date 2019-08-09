@@ -1,0 +1,14 @@
+---
+title: "m3 report setup"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment="")
+```
+
+```{r}
+library(tidyverse)
+read.csv(kc_HouseSales.csv)
+```
+

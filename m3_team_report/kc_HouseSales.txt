@@ -1,0 +1,31 @@
+
+Description: This dataset contains data on homes sold in King County, WA from May 2014 to May 2015.
+
+Description of Variables:
+
+id 		Unique identifier for a house
+date 		Date house was sold
+price 		Price is prediction target
+bedrooms 	Number of Bedrooms/House
+bathrooms 	Number of bathrooms/House
+sqft_living 	Square footage of living space in the home
+sqft_lot 	Square footage of the lot
+floors 		Total floors (levels) in house
+waterfront 	House which has a view of a waterfront
+view 		Has been viewed
+condition 	How good the condition is ( Overall )
+grade 		Overall grade given to the housing unit, based on King County grading system
+sqft_above 	Square footage of house apart from basement
+sqft_basement 	Square footage of the basement
+yr_built 	Year built
+yr_renovated 	Year when house was renovated
+zipcode 	zip code
+lat 		Latitude coordinate
+long 		Longitude coordinate
+sqft_living15 	Square footage of living area in 2015 (implies-- some renovations)
+sqft_lot15 	Square footage of the lot in 2015 (implies-- some renovations)
+
+
+Citation:
+Harlfoxem. (2016). House Sales in King County, USA, Version 1 [Data file]. Retrieved from https://www.kaggle.com/harlfoxem/housesalesprediction/downloads/housesalesprediction.zip/1
+

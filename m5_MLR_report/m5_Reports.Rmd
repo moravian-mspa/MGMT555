@@ -1,0 +1,34 @@
+---
+title: "Module 5 MLR Reports"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment="")
+```
+
+```{r}
+library(tidyverse)
+```
+
+
+## Part 1, EPA Data
+```{r}
+epa <- read_csv("EPA gasoline rating 2019.csv")
+```
+
+### Question
+Which characteristics best predict MPG rating?
+
+### Understand the Data
+
+First I'll check on the correlation and scatterplots of the numeric data.  The R commands below create a new data frame with just the numeric columns, then returns the correlation matrix for those columns
+
+```{r}
+numeric_columns <- epa[, sapply(epa, is.numeric)]
+cor(numeric_columns)
+pairs(numeric_columns)
+```
+
+
+
