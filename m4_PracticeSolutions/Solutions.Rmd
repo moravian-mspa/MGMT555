@@ -5,7 +5,6 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment=NA, toc=TRUE)
 library(tidyverse)
-library(car)
 ```
 
 
@@ -52,8 +51,7 @@ For #2, we are told the manager randomly selected days, so it is reasonable to c
 
 Finally a normal quantile plot for #3:
 ```{r}
-qqnorm(mydata_lm$residuals)
-qqline(mydata_lm$residuals)
+library(car)
 qqPlot(resid(mydata_lm))
 ```
 
@@ -110,8 +108,7 @@ We are not really told anything about this data, so we cannot check #2.  Since t
 
 Finally a normal quantile plot for #3:
 ```{r}
-qqnorm(mydata_lm$residuals)
-qqline(mydata_lm$residuals)
+qqPlot(resid(mydata_lm))
 ```
 
 This looks quite good, so #3 is satisfied.
@@ -169,13 +166,10 @@ We are not really told anything about this data, so we cannot check #2.
 
 Finally a normal quantile plot for #3:
 ```{r}
-library(car)
-qqnorm(mydata_lm$residuals)
-qqline(mydata_lm$residuals)
 qqPlot(resid(mydata_lm))
 ```
 
-This is not a very good normal quantile plot.  The points leave the line significantly at either end, so the assumption of normally distributed errors is in doubt.
+This is not a good normal quantile plot.  The points leave the confidence bands significantly at either end, so the assumption of normally distributed errors is in doubt.
 
 ### Summary
 
