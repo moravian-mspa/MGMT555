@@ -109,6 +109,23 @@ qqline(resid(auction_lm))
 
 This normal probability plot is quite good, so #3 is satisfied.
 
+Did you notice there is one point is the lower left that is away from the line?  Why wasn't I worried about that?  I'm sure you're wondering if there is a way to more precisely quantify when a plot meets these requirements.  In fact there is!
+
+We need to install a new library called `car`.  Go to the "Tools" menu, choose "Install Packages..." then search for and install the `car` package.
+
+Once that is installed, we load it with the `library` command, then create a quantile plot with confidence bands.  If all points land within the dashed line then we can say we have evidence that the data is from a normally distributed population.
+
+We use the `qqPlot` command (note the capital P) on the residuals.
+```{r}
+library(car)
+qqPlot(resid(auction_lm))
+```
+
+Since all the points land within the bands we can say this assumption is met.
+
+Going forward I suggest you always load the `car` package and use the `qqPlot` command when checking for normality.  The dashed lines confidence bands are very useful.
+
+### Our conclusion
 
 Overall we can use this model, but should expect some uncertainty with our predictions since our $R^2$ indicates this one predictor does not perfectly explain the variation in hours.
 
