@@ -1,0 +1,7 @@
+Age		Age of the clock (years)
+Bidders		Number of individuals participating in the bidding
+Price		Selling price (pounds sterling)
+Temp		The outside temperature the day of the auction
+Condition	Condition of the clock
+
+Mendenhall, W, and Sincich, TL (1993). Selling Price of Antique Grandfather Clocks [Data File]. Accessed at http://www.statsci.org/data/general/auction.txt

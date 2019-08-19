@@ -1,0 +1,53 @@
+---
+title: "Module 5 MLR Report"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment="")
+library(tidyverse)
+```
+
+
+## Modeling Sale Price
+
+### Question
+Which characteristics best predict house sale price?
+
+We load the data to begin.
+```{r}
+sales <- read_csv("kc_HouseSales.csv")
+attach(sales)
+```
+
+### Understand the Data
+
+First I'll check on the correlation of the numeric data.  We'll use the `cor` command to find correlation to `price` for all but the `date` column (since that is not numerical).  Since `date` is the second column, we can exclude it with this command.
+
+```{r}
+cor(sales[, -2], price)
+```
+
+Looking at correlation with `price` it seems most of these variables have at least a moderate correlation except for `id`, `sqft_lot`, `condition`, `yr_built`, and `zipcode`.  
+
+Let's try to make a model with all the other variables.
+```{r}
+summary(lm(price ~ bedrooms + bathrooms + sqft_living + floors + waterfront + view + grade + sqft_above + sqft_basement + yr_renovated + lat))
+```
+
+Notice the NA for `sqft_basement`. That is `R` indicating that variable is too closely related to the others. So we don't need it in our model.
+```{r}
+summary(lm(price ~ bedrooms + bathrooms + sqft_living + floors + waterfront + view + grade + sqft_above + yr_renovated + lat))
+```
+
+Now it looks like the least significant variable is `sqft_above`.
+```{r}
+summary(lm(price ~ bedrooms + bathrooms + sqft_living + floors + waterfront + view + grade + yr_renovated + lat))
+```
+
+Now we will need to remove `bathrooms`.
+```{r}
+summary(lm(price ~ bedrooms + sqft_living + floors + waterfront + view + grade + yr_renovated + lat))
+```
+
+This model looks good so far. It is significant over all, each variable is significant, and the $R^2$ value is 0.66 indicating these variables explain 66% of the variation in sale price.

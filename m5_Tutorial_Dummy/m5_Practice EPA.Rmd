@@ -1,0 +1,59 @@
+---
+title: "Module 5 MLR Reports"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment="")
+library(tidyverse)
+```
+
+
+## Part 1, EPA Data
+```{r}
+epa <- read_csv("EPA gasoline rating 2019.csv")
+attach(epa)
+```
+
+### Question
+Which characteristics best predict MPG rating?
+
+### Understand the Data
+
+First I'll check on the correlation and scatterplots of the numeric data.  The R commands below create a new data frame with just the numeric columns, then returns the correlation matrix for those columns
+
+```{r}
+numeric_columns <- epa[, sapply(epa, is.numeric)]
+cor(numeric_columns)
+```
+
+Air pollution score seems to have the smallest correlation, but is still large enough to keep for now.  Of course City and Highway MPG are strongly correlated with Combined MPG, but that's just because Combined MPG is computed directly from them.
+
+I think the nominal variables that might be correlated are Drive type, and Vehicle Class.  Those are nominal variables though, so we know `R` will create dummy variables for us.
+
+```{r}
+unique(epa$Drive)
+```
+
+Only two values, so I expect `R` will create one dummy variable here.
+
+```{r}
+unique(epa$`Veh Class`)
+```
+
+Wow, for `Veh Class` we have 10 choices so we'll need 9 dummy variables.  Luckily `R` will take care of this for us.
+
+```{r}
+summary(lm(`Cmb MPG` ~ Cyl + Displ + `Air Pollution Score` + `Veh Class` + Drive))
+```
+
+As expected there are 9 dummy variables for `Veh Class` and one for `Drive`.
+
+Notice that two of the dummy variables for `Veh Class` are not significant. However, we cannot remove just one of the dummy variables.  We need to keep all or none of them. In other words, either `Veh Class` is significant or it is not. In this case, since most of the dummy variables have very small p-values we will keep them.
+
+Consider what happens if we add `Cert Region`, the certification region. I would expect this not to be related to mpg, but let's check.
+```{r}
+summary(lm(`Cmb MPG` ~ Cyl + Displ + `Air Pollution Score` + `Veh Class` + Drive + `Cert Region`))
+```
+
+Here we see the dummy variable for `Cert Region` is not significant, so we should remove it.

@@ -1,0 +1,43 @@
+---
+title: "Module 5 MLR Practice"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+
+## Part 1, the water data
+```{r}
+water <- read_csv("water.csv")
+attach(water)
+```
+
+```{r}
+pairs(water)
+```
+
+Of the variables, `Days` seems to have the least correlation with `Water`.
+
+```{r}
+cor(water)
+```
+
+The correlation coefficients confirm what I saw in the plots above.
+
+Let's try to create a model.
+```{r}
+summary(lm(Water ~ Temperature + Production + Days + Persons))
+```
+
+As we suspected, `Days` is the least significant. We remove that variable.
+```{r}
+summary(lm(Water ~  Production + Persons))
+```
+
+At this point all the variables are significant so we keep them in our final model.

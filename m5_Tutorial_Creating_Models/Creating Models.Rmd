@@ -1,0 +1,76 @@
+---
+title: "Assessing Model Fit and Effect Size"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment=NA, toc=TRUE)
+library(tidyverse)
+```
+
+Last time we saw there were two questions in evluating our model
+
+1. **Is there evidence of at least one non-zero (0) coefficient?**
+2. **Is there also evidence that each individual coefficient is non-zero?**
+
+With the advertising data we saw the answer to the first question was yes, but the second was not a yes for every variable.
+
+Let's revisit this data.  Recall, we have data from a hypothetical company's advertising spending and sales for the last three years.  The variables are `TV`, `Radio`, and `Newspaper` which are the amount spent on the respective ads in thousands of dollars.  The final variable is `Sales` which is that month's sales in units.
+
+Download the data and import it to RStudio. ( https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m5_Tutorial_FitandEffect/Advertising.csv )
+```{r}
+library(tidyverse)
+Advertising <- read_csv("Advertising.csv");
+attach(Advertising)
+head(Advertising)
+```
+
+We create a model of the form:
+<center>
+`Sales` = $b_0$ + $b_1$`TV` + $b_2$`Newspaper` + $b_3$`Radio`
+</center>
+
+```{r}
+summary(lm(Sales ~ TV + Newspaper + Radio))
+```
+
+At this point we saw that the model was significant, but the variable `Newspaper` was not significant. Let's try another model without that variable.
+
+```{r}
+summary(lm(Sales ~ TV + Radio))
+```
+
+Notice our adjusted-$R^2$ decreased slightly, but the overall p-value is smaller and the coefficients on each of the other variables changed slightly.  We are more confident in these numbers.
+
+## Backward Elimination
+The process we just used is called **backward elimination**. Here's how it works.
+
+1. Create a model with all the predictor variables.
+2. Find the variable with the largest p-value.  If it is larger than our threshold (we will use 0.05) then that variable is eliminated from our model.
+3. Create a new model with the remaining variables and repeat until all remaining variables have p-values less than the threshold.
+
+## Another example
+Let's say an antique clock dealer has collected data on recent auctions of grandfather clocks. The variables are `Price`: final selling price, `Bidders`: the number of bidders, `Age`: the age of the clock, `Temp`: the outside temperature the day of the auction.
+```{r}
+clocks <- read_csv("auction.csv");
+```
+
+Let's check the correlations of these variables.
+```{r}
+cor(clocks)
+```
+
+We are most interested in what correlates well with `Price`.  IT looks like `Temp` has the least correlation.
+
+We can create a model with all these variables.
+```{r}
+summary(lm(clocks$Price ~ clocks$Bidders + clocks$Age + clocks$Temp))
+```
+
+As we suspected, the outside temperature is the least significant, so we will remove it.
+```{r}
+summary(lm(clocks$Price ~ clocks$Bidders + clocks$Age ))
+```
+
+Every variable is significant, so we are done.

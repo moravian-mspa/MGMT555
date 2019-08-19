@@ -1,0 +1,85 @@
+https://www.tandfonline.com/doi/full/10.1080/10691898.2016.1196064&sa=D&ust=1565280812721000&usg=AFQjCNEfX2qyf2o0iMbPkQShn6jLqzllAw
+
+Concetta A. DePaolo, David F. Robinson & Aimee Jacobs (2016) Café Data 2.0: New Data From a New and Improved Café, Journal of Statistics Education, 24:2, 85-103, DOI: 10.1080/10691898.2016.1196064
+
+
+
+NAME: Café Data_TimeSeriesData
+TYPE: Time Series
+SIZE: 63 observations, 17 variables
+
+DESCRIPTIVE ABSTRACT:
+
+This file includes sales data collected from a café managed by undergraduate business students. The data were collected over a three-month period during the spring semester of 2015 using a Point of Sale system, which records information including items, quantity, price and payment method for all transactions. This data set includes time series data for 14 of the café’s top selling items collected between January 22 and April 27, 2015.
+
+SOURCE: 
+
+The sales data were collected over a three-month period during the spring semester of 2015. At the end of the semester, the data was pulled from the POS system for analysis.
+
+
+VARIABLE DESCRIPTIONS: 
+
+Dataset cafédata_timeseriesdata.txt
+
+
+Columns 
+
+1 Date - date of the transaction
+2 DayOfWeek- day of the week (Monday through Friday)
+3 Time_t - identifies the period (day)
+4 14 additional columns - number of items sold each day for each item
+
+Values are aligned and delimited by tabs. There are several missing values from Friday, March 13, 2015 (t = 37), the Friday before the university’s Spring break, as the café was closed. The data set contains values for Date, DayofWeek and Time_t for this record. 
+
+
+
+STORY BEHIND THE DATA:
+
+The Executive Express Café was founded 2009 and is run by undergraduate business students as part of their capstone course. It reopened in a new location in 2012 that is a spacious professionally designed space. This relocation has had a positive impact on sales with daily sales increasing almost 30%. There have been new products and improvements in the student run business including an espresso machine, various featured items from local restaurants and a POS system. The café data were collected from daily sales for this student run café located in the College of Business. It is a real data set that can be used for various data analyses. The data also have practical significance as they will aid in real and instructional business decision-making. The undergraduate students that run the café will use the data analysis to help with the ordering and processing of the café product lines. Various scenarios can be shaped for statistical instructional purposes by instructors. This data set showcases daily time series data from the café operations.
+
+
+
+Additional information about these data can be found in the " Café Data 2.0: New Data from a New and Improved Café" article in the Journal of Statistics Education.
+
+
+
+PEDAGOGICAL NOTES:
+
+The example data analysis provided in this section will help students better understand the buying habits and preferences of the café clientele. This data set is a multi-purpose data set that can be used in the instruction of various statistical concepts and practices related to time series forecasting for data with trend and seasonality. 
+
+Since the data relate to a student-run enterprise, we believe that statistics students, especially those in business disciplines, will find the application interesting and engaging. 
+
+
+
+
+SUBMITTED BY:
+
+Concetta A. DePaolo 
+Associate Professor of Operations Management & Analysis 
+Scott College of Business 
+Indiana State University 
+Terre Haute, IN 47809 
+cdepaolo@indstate.edu 
+Phone: 812-237-2283 
+Fax: 812-237-8133 
+
+David F. Robinson 
+Assistant Professor of Management 
+Scott College of Business 
+Indiana State University 
+Terre Haute, IN 47809 
+david.robinson@indstate.edu
+Phone: 812-237-8829
+Fax: 812-237-8133
+
+Aimee Jacobs
+Instructor-MIS and Operations Management & Analysis
+Scott College of Business 
+Indiana State University 
+Terre Haute, IN 47809 
+aimee.jacobs@indstate.edu 
+Phone: 812-237-2276
+Fax: 812-237-8133
+
+
+
