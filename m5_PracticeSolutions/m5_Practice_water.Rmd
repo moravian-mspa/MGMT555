@@ -1,5 +1,5 @@
 ---
-title: "Module 5 MLR Practice"
+title: "Module 5 MLR Practice Solutions"
 output: html_document
 ---
 
@@ -14,18 +14,18 @@ library(tidyverse)
 
 ## Part 1, the water data
 ```{r}
-water <- read_csv("water.csv")
-attach(water)
+waterData <- read_csv("water.csv")
+attach(waterData)
 ```
 
 ```{r}
-pairs(water)
+pairs(waterData)
 ```
 
 Of the variables, `Days` seems to have the least correlation with `Water`.
 
 ```{r}
-cor(water)
+cor(waterData, Water)
 ```
 
 The correlation coefficients confirm what I saw in the plots above.
@@ -41,3 +41,54 @@ summary(lm(Water ~  Production + Persons))
 ```
 
 At this point all the variables are significant so we keep them in our final model.
+
+The model will be only somewhat useful.  It is significant overall, and the $R^2$ indicates the model should explain 50% of the variation in water usage.  There are likely other variables we need to consider.
+
+
+
+## Part 2, the Cafe data
+```{r}
+cafe <- read_csv("CafeData2.csv")
+attach(cafe)
+```
+
+
+I'll need to create a new column for total coffee sales.  Since the problem asked for all coffee drinks I'll add the four relevant columns and create a new column called `total_coffee`.
+```{r}
+cafe$total_coffee <- `Coffee (Large 16oz)`+`Coffee (Medium 12oz)`+Lattes+Mochas
+attach(cafe)
+```
+
+Now `DayOfWeek` is a nominal variable, so we expect `R` to create dummy variables for it when creating linear models.
+
+### Total Coffee vs Day of Week
+
+Let's try a linear model with the day of the week predicting coffee sales.
+```{r}
+summary(lm(total_coffee ~ DayOfWeek))
+```
+
+This does not look very good. The model is only barely significant (p-value 0.03), and the $R^2$ value is only 0.11.
+
+### Total Sales vs Day of Week
+
+Now we will see if day of the week can explain `TotalSales`
+```{r}
+summary(lm(TotalSales ~ DayOfWeek))
+```
+
+This model is very promising.  It is statistically significant, and the $R^2$ is 0.77.
+
+The equation is
+$$TotalSales = 134.19 + 113.56 * Mon + 298.62 * Tue + 293.04 * Wed + 305.83 * Thu$$
+
+From this we can predict average sales on a Monday will be $134.19+113.56 = 247.75$.
+
+We predict average sales on Fridays to be $134.19$.  
+
+
+### Summary
+It looks like the day of the week can help to predict `TotalSales` but not necessarily total coffee drinks.
+
+
+
