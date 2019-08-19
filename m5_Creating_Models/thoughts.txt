@@ -1,7 +1,0 @@
-dummy variables here?
-
-interactions
-
-backwards elimination
-
-
