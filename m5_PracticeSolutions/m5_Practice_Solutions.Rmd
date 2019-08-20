@@ -14,7 +14,7 @@ library(tidyverse)
 
 ## Part 1, the water data
 ```{r}
-waterData <- read_csv("water.csv")
+waterData <- read_csv("waterComplete.csv")
 attach(waterData)
 ```
 
@@ -37,11 +37,18 @@ summary(lm(Water ~ Temperature + Production + Days + Persons))
 
 As we suspected, `Days` is the least significant. We remove that variable.
 ```{r}
+summary(lm(Water ~  Temperature + Production + Persons))
+```
+
+Now `Temperature` is the lest significant, so we will remove.
+
+```{r}
 summary(lm(Water ~  Production + Persons))
 ```
 
 At this point all the variables are significant so we keep them in our final model.
 
+### Summary
 The model will be only somewhat useful.  It is significant overall, and the $R^2$ indicates the model should explain 50% of the variation in water usage.  There are likely other variables we need to consider.
 
 
