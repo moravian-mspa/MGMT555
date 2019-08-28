@@ -368,20 +368,20 @@ summary {
 
 
 <p>So far we’ve been working with ordinal or ratio predictor variables, but what if we want to use a nominal predictor variable?</p>
-<p>For example consider the data below showing some employees salaries in thousands of dollars, gender, and years of experience. What if we wanted to make a model using gender as a predictor variable?</p>
+<p>For example consider the data below showing some employees’ salaries in thousands of dollars, gender, and years of experience. What if we wanted to make a model using gender as one of the predictor variables?</p>
 <pre><code>  salary gender years
 1     85   male     8
 2     95 female    10
 3    100   male    11</code></pre>
-<p>We cannot use it as it appears. But what if we decided to code gender by letting a 1 represent female, and a 0 represent male?</p>
+<p>We cannot use it as it appears since “male”/“female” is not something we can plug into a linear model. But what if we decided to code gender by letting a 1 represent female, and a 0 represent male?</p>
 <pre><code>  salary gender years
 1     85      0     8
 2     95      1    10
 3    100      0    11</code></pre>
-<p>Now we can create a linear model using these variables.</p>
+<p>Now we can create a linear model using these variables. This is how we can work with nominal variables when creating regression models.</p>
 <div id="a-clock-example" class="section level2">
 <h2>A Clock Example</h2>
-<p>Let’s say an antique clock dealer has collected data on recent auctions of grandfather clocks. The variables are <code>Price</code>: final selling price, <code>Bidders</code>: the number of bidders, <code>Age</code>: the age of the clock, <code>Temp</code>: the outside temperature the day of the auction, and <code>Condition</code>: the condition of the clock.</p>
+<p>Imagine an antique clock dealer has collected data on recent auctions of grandfather clocks. The variables are <code>Price</code>: final selling price, <code>Bidders</code>: the number of bidders, <code>Age</code>: the age of the clock, <code>Temp</code>: the outside temperature the day of the auction, and <code>Condition</code>: the condition of the clock. (We used data similar to this in a previous tutorial. For this tutorial we’ve added the nominal variable <code>Condition</code>.)</p>
 <pre class="r"><code>clocks &lt;- read_csv(&quot;auctionExtra.csv&quot;);</code></pre>
 <pre><code>Parsed with column specification:
 cols(
@@ -401,22 +401,24 @@ cols(
 4   150       9  1522    68 Excellent
 5   156       6  1047    64 Good     
 6   182      11  1979    67 Excellent</code></pre>
-<p>Note when <code>R</code> imports this data set that <code>Condition</code> is a column containing characters rather than numbers. Let’s see what is in that column.</p>
+<p>Note when <code>R</code> imports this data set that <code>Condition</code> is a column containing characters rather than numbers. We can see that since <code>R</code> tells us that column is <code>col_character()</code>. A character column like this has some restrictions. For instance, <code>R</code> will return an error if we try to compute the mean of that column.</p>
+<p>Let’s see what entries are in that column. The following command lists all unique entries in the column.</p>
 <pre class="r"><code>unique(clocks$Condition)</code></pre>
 <pre><code>[1] &quot;Good&quot;      &quot;Fair&quot;      &quot;Excellent&quot;</code></pre>
 <p>There are three options in that column. This means we will need two dummy variables to indicate all possible options. Do you recall above that we needed one variable to represent the two options male/female? In general, when we have <span class="math inline">\(n\)</span> options we will need <span class="math inline">\(n-1\)</span> dummy variables.</p>
+<p>Below is a table with dummy variables for <code>Condition</code>.</p>
 <pre><code># A tibble: 6 x 7
-    Age Bidders Price  Temp Condition Condition_Fair Condition_Good
-  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;              &lt;dbl&gt;          &lt;dbl&gt;
-1   127      13  1235    62 Good                   0              1
-2   115      12  1080    39 Good                   0              1
-3   127       7   845    53 Fair                   1              0
-4   150       9  1522    68 Excellent              0              0
-5   156       6  1047    64 Good                   0              1
-6   182      11  1979    67 Excellent              0              0</code></pre>
+    Age Bidders Price  Temp Condition Cond_Fair Cond_Good
+  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;
+1   127      13  1235    62 Good              0         1
+2   115      12  1080    39 Good              0         1
+3   127       7   845    53 Fair              1         0
+4   150       9  1522    68 Excellent         0         0
+5   156       6  1047    64 Good              0         1
+6   182      11  1979    67 Excellent         0         0</code></pre>
 <p>Notice the extra two columns? There is a column to indicate “Fair”, and a column to indicate “Good”. So if there is a 0 in both columns then that must mean the condition was “Excellent”.</p>
-<p>The process for generating a model in <code>R</code> is very straightforward. Simply run the same <code>lm</code> command and <code>R</code> will detect the nominal predictor variable and create dummy variables for us automatically.</p>
-<p>Let’s try to a model to predict price using all the other variables present.</p>
+<p>Now in fact we don’t really need to generate these dummy variables by hand. The process for generating a model involving a nominal variable in <code>R</code> is very straightforward. Simply run the same <code>lm</code> command and <code>R</code> will detect the nominal predictor variable and create dummy variables for us automatically. We do not need to manually create a table like the one above.</p>
+<p>Let’s try to a model to predict price using all the other variables present. I will not use the dummy variables we made, instead I will just tell <code>R</code> to use the variable <code>Condition</code> and see what happens.</p>
 <pre class="r"><code>attach(clocks)
 summary(lm(Price ~ Age + Bidders + Temp + Condition))</code></pre>
 <pre><code>
@@ -441,8 +443,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Residual standard error: 116.5 on 26 degrees of freedom
 Multiple R-squared:  0.9263,    Adjusted R-squared:  0.9122 
 F-statistic: 65.39 on 5 and 26 DF,  p-value: 6.845e-14</code></pre>
-<p>Notice there are two variables for “Condition”. <code>R</code> created dummy variables in the same way we did.</p>
-<p>Using bacwards elimination we would remove the <code>Temp</code> variable and have the resulting model.</p>
+<p>Notice there are two variables for “Condition”. <code>R</code> created dummy variables in the same way we did!</p>
+<p>Using backwards elimination we would remove the <code>Temp</code> variable and have the resulting model.</p>
 <pre class="r"><code>model &lt;- lm(Price ~ Age + Bidders + Condition)
 summary(model)</code></pre>
 <pre><code>
@@ -472,6 +474,114 @@ F-statistic: 84.86 on 4 and 27 DF,  p-value: 6.914e-15</code></pre>
 <p>Similarly, a clock that is in good condition will have a 1 for ConditionGood and 0 for ConditionFair giving <span class="math display">\[Price = -654.40 + 8.94 * Age + 63.66 * Bidders\]</span></p>
 <p>And finally, a clock in excellent condition has a 0 for both dummy variables giving the equation <span class="math display">\[Price = -401.09 + 8.94 * Age + 63.66 * Bidders\]</span></p>
 <p>Did you notice that the only thing really changing is the constant term? The coefficents on the other variables stay the same. So the rate at which <code>Age</code> affects the price will be the same for clocks in any condition.</p>
+</div>
+<div id="epa-data" class="section level2">
+<h2>EPA Data</h2>
+<p>The file “EPA gasoline rating 2019.csv”<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> contains data about 2019 model year vehicles collected by the Enivronmental Protection Agency along with the EPA miles per gallon fuel efficiency ration. This data set includes gasoline powered vehicles only. The accompanying text file includes descriptions of each variable.</p>
+<p>In particular, I might like to know, whic variables affect MPG rating? For the purposes of this example, let’s focus on just a couple that seem most obvious. We’ll use <code>Displ</code> since engine size should affect fuel economy, and we’ll use <code>Veh Class</code> since that’s a nominal variable, and it seems likely that will affect mpg as well.</p>
+<pre class="r"><code>epa &lt;- read_csv(&quot;EPA gasoline rating 2019.csv&quot;)</code></pre>
+<pre><code>Parsed with column specification:
+cols(
+  Model = col_character(),
+  Displ = col_double(),
+  Cyl = col_double(),
+  Trans = col_character(),
+  Drive = col_character(),
+  `Cert Region` = col_character(),
+  Stnd = col_character(),
+  `Stnd Description` = col_character(),
+  `Underhood ID` = col_character(),
+  `Veh Class` = col_character(),
+  `Air Pollution Score` = col_double(),
+  `City MPG` = col_double(),
+  `Hwy MPG` = col_double(),
+  `Cmb MPG` = col_double(),
+  `Greenhouse Gas Score` = col_double(),
+  SmartWay = col_character(),
+  `Comb CO2` = col_double()
+)</code></pre>
+<pre class="r"><code>attach(epa)</code></pre>
+<p><code>Displ</code> is a numerical variable, so we can include that in our model as usual.</p>
+<p>However, <code>Veh Class</code> is nominal, so we know <code>R</code> will need to create dummy variables for us. Let’s see how many different classes there are.</p>
+<pre class="r"><code>unique(epa$`Veh Class`)</code></pre>
+<pre><code> [1] &quot;small car&quot;       &quot;small SUV&quot;       &quot;midsize car&quot;    
+ [4] &quot;station wagon&quot;   &quot;large car&quot;       &quot;standard SUV&quot;   
+ [7] &quot;special purpose&quot; &quot;pickup&quot;          &quot;minivan&quot;        
+[10] &quot;van&quot;            </code></pre>
+<p>Wow, for <code>Veh Class</code> we have 10 choices so we’ll need 9 dummy variables. (Do you see why?) Luckily <code>R</code> will take care of this for us.</p>
+<p>We generate the linear model below.</p>
+<pre class="r"><code>summary(lm(`Cmb MPG` ~ Displ + `Veh Class`))</code></pre>
+<pre><code>
+Call:
+lm(formula = `Cmb MPG` ~ Displ + `Veh Class`)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.1004 -2.3791 -0.4322  1.2878 29.5314 
+
+Coefficients:
+                           Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                33.44658    0.35288  94.781  &lt; 2e-16 ***
+Displ                      -3.11126    0.07015 -44.354  &lt; 2e-16 ***
+`Veh Class`midsize car      2.20816    0.33655   6.561 6.52e-11 ***
+`Veh Class`minivan         -1.06978    1.04282  -1.026 0.305066    
+`Veh Class`pickup          -2.17479    0.39483  -5.508 4.01e-08 ***
+`Veh Class`small car       -0.45678    0.30189  -1.513 0.130387    
+`Veh Class`small SUV       -1.84497    0.33102  -5.574 2.77e-08 ***
+`Veh Class`special purpose -3.87295    0.59900  -6.466 1.22e-10 ***
+`Veh Class`standard SUV    -1.91775    0.37379  -5.131 3.12e-07 ***
+`Veh Class`station wagon    0.82363    0.48700   1.691 0.090923 .  
+`Veh Class`van             -6.74606    1.97023  -3.424 0.000627 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.904 on 2404 degrees of freedom
+Multiple R-squared:  0.5748,    Adjusted R-squared:  0.5731 
+F-statistic:   325 on 10 and 2404 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>As expected there are 9 dummy variables for <code>Veh Class</code>.</p>
+<p>Notice that three of the dummy variables for <code>Veh Class</code> are not significant. However, we cannot remove just one of the dummy variables. We need to keep all or none of them. In other words, either <code>Veh Class</code> is significant or it is not. In this case, since most of the dummy variables have very small p-values we will keep them.</p>
+<p>Consider what happens if we add <code>Cert Region</code>, the certification region. I would expect this not to be related to mpg, but let’s check.</p>
+<pre class="r"><code>summary(lm(`Cmb MPG` ~ Displ + `Veh Class` + `Cert Region`))</code></pre>
+<pre><code>
+Call:
+lm(formula = `Cmb MPG` ~ Displ + `Veh Class` + `Cert Region`)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.1151 -2.3643 -0.4467  1.3026 29.5464 
+
+Coefficients:
+                           Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                33.43167    0.36223  92.293  &lt; 2e-16 ***
+Displ                      -3.11127    0.07016 -44.346  &lt; 2e-16 ***
+`Veh Class`midsize car      2.20845    0.33662   6.561 6.54e-11 ***
+`Veh Class`minivan         -1.07034    1.04304  -1.026 0.304913    
+`Veh Class`pickup          -2.17453    0.39492  -5.506 4.05e-08 ***
+`Veh Class`small car       -0.45619    0.30196  -1.511 0.130982    
+`Veh Class`small SUV       -1.84481    0.33108  -5.572 2.80e-08 ***
+`Veh Class`special purpose -3.87282    0.59912  -6.464 1.23e-10 ***
+`Veh Class`standard SUV    -1.91752    0.37387  -5.129 3.15e-07 ***
+`Veh Class`station wagon    0.82432    0.48711   1.692 0.090725 .  
+`Veh Class`van             -6.74565    1.97063  -3.423 0.000629 ***
+`Cert Region`FA             0.02910    0.15893   0.183 0.854731    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.905 on 2403 degrees of freedom
+Multiple R-squared:  0.5748,    Adjusted R-squared:  0.5729 
+F-statistic: 295.4 on 11 and 2403 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Here we see the dummy variable for <code>Cert Region</code> is not significant, so we should remove it from our model.</p>
+</div>
+<div id="practice" class="section level2">
+<h2>Practice</h2>
+<p>Now use the EPA data to try to create a better model. We’ve decided that <code>displ</code> and <code>Veh Class</code> make sense to include while <code>Cert Region</code> does not. Consider the other variables in this data set and create a model using all the variables that seem most appropriate. Use backward elimination to refine your model.</p>
+<p>Note: You should likely not include <code>Hwy MPG</code> or <code>City MPG</code> because <code>Cmb MPG</code> is just a combination of the two of them. Instead, use characteristics of the vehicle to try and predict <code>Cmb MPG</code>.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>EPA (2019). Fuel Economy Data Set [Data File]. Accessed at <a href="https://www.fueleconomy.gov/feg/download.shtml" class="uri">https://www.fueleconomy.gov/feg/download.shtml</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
 </div>
 
 

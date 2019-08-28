@@ -32,7 +32,7 @@ If we fail to reject the null hypothesis, then we do not have evidence that this
 
 Let's revisit the advertising data.  Recall, we have data from a hypothetical company's advertising spending and sales for the last three years.  The variables are `TV`, `Radio`, and `Newspaper` which are the amount spent on the respective ads in thousands of dollars.  The final variable is `Sales` which is that month's sales in units.
 
-Download the data and import it to RStudio. ( https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m5_Tutorial_FitandEffect/Advertising.csv )
+Download the data and import it to RStudio. ( https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m5_Tutorial_FitandEffect/Advertising.csv )Ò
 ```{r}
 library(tidyverse)
 Advertising <- read_csv("Advertising.csv");
@@ -86,15 +86,15 @@ Recall, $R^2$ tells us the proportion of variation in the response variable expl
 
 Looking at our `R` output above we see there are two $R^2$ statistics given.  The problem with $R^2$ is that adding more variables will always cause it to increase.  If we add more degrees of freedom to our model, more "wiggle room" if you will, then we can always make our model approximate the data more closely.  In fact, potentially, if we add enough variables we will match the data perfectyl!
 
-**However**, that's not necessarily a good thing.  Remember, the data you have is a sample and our goal is not to create a model that perfectly predicts the sample, but rather one that is useful in predicting what will happen beyond the sample.  A model that perfectly matches the sample data might not be useful at all when looking beyond the sample -- we've too closely modelled the randomness in the data.  This is called 'overfitting the model'.
+**However**, that's not necessarily a good thing.  Remember, the data you have is a sample and our goal is not to create a model that perfectly predicts the sample, but rather one that is useful in predicting what will happen beyond the sample.  A model that perfectly matches the sample data might not be useful at all when looking beyond the sample -- the model might too closely model the randomness in the data.  This is called 'overfitting the model'.
 
-So we want to try and avoid both too many, and too few predictor variables.  To balance the tendancy of $R^2$ to increase as we add more variables we use the adjusted-$R^2$.  You saw the formula in your reading, and you will notice the formula takes into account the number of predictors we are using relative to the number of data points we have.
+So we want to try and avoid both too many, and too few predictor variables.  To balance the tendancy of $R^2$ to increase as we add more variables we use the adjusted-$R^2$.  You saw the formula in your reading, and you likely noticed that the formula takes into account the number of predictors we are using relative to the number of data points we have.
 
 Typically we will let `R` compute this for us and in fact for the example above we see an adjusted-$R^2$ of 0.8564 which is smaller than the unadjusted value.
 
 ### Interpeting adjusted-$R^2$
 
-Remember, adjusted-$R^2$ tells us what percent of the variation in `Sales` is explained by the model.  Generally, a higher $R^2$ is better, but a low $R^2$ does not mean we should throw our model away.
+Remember, adjusted-$R^2$ tells us what percent of the variation in `Sales` is explained by the model.  Generally, a higher $R^2$ is better, but a low $R^2$ does not necessarily mean we should throw our model away.
 
 High $R^2$ values mean the model does a good job explaining what is happening with the response variable.  This means we should feel confident in using our model to make predictions.
 

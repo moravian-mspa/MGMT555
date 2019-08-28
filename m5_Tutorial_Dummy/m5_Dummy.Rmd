@@ -11,52 +11,55 @@ library(tidyverse)
 
 So far we've been working with ordinal or ratio predictor variables, but what if we want to use a nominal predictor variable?
 
-For example consider the data below showing some employees salaries in thousands of dollars, gender, and years of experience.  What if we wanted to make a model using gender as a predictor variable?
+For example consider the data below showing some employees' salaries in thousands of dollars, gender, and years of experience.  What if we wanted to make a model using gender as one of the predictor variables?
 ```{r echo=FALSE}
 data.frame(salary=c(85, 95, 100), gender=c('male', 'female', 'male'), years=c(8, 10, 11) )
 ```
 
-We cannot use it as it appears. But what if we decided to code gender by letting a 1 represent female, and a 0 represent male?
+We cannot use it as it appears since "male"/"female" is not something we can plug into a linear model. But what if we decided to code gender by letting a 1 represent female, and a 0 represent male?
 ```{r echo=FALSE}
 data.frame(salary=c(85, 95, 100), gender=c(0, 1, 0), years=c(8, 10, 11) )
 ```
 
-Now we can create a linear model using these variables.
+Now we can create a linear model using these variables. This is how we can work with nominal variables when creating regression models.
 
 ## A Clock Example
 
-Let's say an antique clock dealer has collected data on recent auctions of grandfather clocks. The variables are `Price`: final selling price, `Bidders`: the number of bidders, `Age`: the age of the clock, `Temp`: the outside temperature the day of the auction, and `Condition`: the condition of the clock.
+Imagine an antique clock dealer has collected data on recent auctions of grandfather clocks. The variables are `Price`: final selling price, `Bidders`: the number of bidders, `Age`: the age of the clock, `Temp`: the outside temperature the day of the auction, and `Condition`: the condition of the clock. (We used data similar to this in a previous tutorial. For this tutorial we've added the nominal variable `Condition`.)
 ```{r}
 clocks <- read_csv("auctionExtra.csv");
 head(clocks)
 ```
 
-Note when `R` imports this data set that `Condition` is a column containing characters rather than numbers.  Let's see what is in that column.
+Note when `R` imports this data set that `Condition` is a column containing characters rather than numbers. We can see that since `R` tells us that column is `col_character()`. A character column like this has some restrictions. For instance, `R` will return an error if we try to compute the mean of that column.
+
+Let's see what entries are in that column. The following command lists all unique entries in the column.
 ```{r}
 unique(clocks$Condition)
 ```
 
 There are three options in that column. This means we will need two dummy variables to indicate all possible options. Do you recall above that we needed one variable to represent the two options male/female?  In general, when we have $n$ options we will need $n-1$ dummy variables.
 
+Below is a table with dummy variables for `Condition`.
 ```{r echo=FALSE}
-clocks$Condition_Fair <- as.numeric(clocks$Condition == "Fair")
-clocks$Condition_Good <- as.numeric(clocks$Condition == "Good")
+clocks$Cond_Fair <- as.numeric(clocks$Condition == "Fair")
+clocks$Cond_Good <- as.numeric(clocks$Condition == "Good")
 head(clocks)
 ```
 
 Notice the extra two columns?  There is a column to indicate "Fair", and a column to indicate "Good".  So if there is a 0 in both columns then that must mean the condition was "Excellent".
 
-The process for generating a model in `R` is very straightforward.  Simply run the same `lm` command and `R` will detect the nominal predictor variable and create dummy variables for us automatically.
+Now in fact we don't really need to generate these dummy variables by hand. The process for generating a model involving a nominal variable in `R` is very straightforward.  Simply run the same `lm` command and `R` will detect the nominal predictor variable and create dummy variables for us automatically. We do not need to manually create a table like the one above.
 
-Let's try to a model to predict price using all the other variables present.
+Let's try to a model to predict price using all the other variables present. I will not use the dummy variables we made, instead I will just tell `R` to use the variable `Condition` and see what happens.
 ```{r}
 attach(clocks)
 summary(lm(Price ~ Age + Bidders + Temp + Condition))
 ```
 
-Notice there are two variables for "Condition".  `R` created dummy variables in the same way we did.
+Notice there are two variables for "Condition".  `R` created dummy variables in the same way we did!
 
-Using bacwards elimination we would remove the `Temp` variable and have the resulting model.
+Using backwards elimination we would remove the `Temp` variable and have the resulting model.
 ```{r}
 model <- lm(Price ~ Age + Bidders + Condition)
 summary(model)
@@ -79,3 +82,47 @@ $$Price = -401.09 + 8.94 * Age + 63.66 * Bidders$$
 Did you notice that the only thing really changing is the constant term?  The coefficents on the other variables stay the same. So the rate at which `Age` affects the price will be the same for clocks in any condition.
 
 
+
+## EPA Data
+
+The file "EPA gasoline rating 2019.csv"^[EPA (2019). Fuel Economy Data Set [Data File]. Accessed at https://www.fueleconomy.gov/feg/download.shtml] contains data about 2019 model year vehicles collected by the Enivronmental Protection Agency along with the EPA miles per gallon fuel efficiency ration. This data set includes gasoline powered vehicles only. The accompanying text file includes descriptions of each variable.
+
+In particular, I might like to know, whic variables affect MPG rating? For the purposes of this example, let's focus on just a couple that seem most obvious. We'll use `Displ` since engine size should affect fuel economy, and we'll use `Veh Class` since that's a nominal variable, and it seems likely that will affect mpg as well.
+
+
+```{r}
+epa <- read_csv("EPA gasoline rating 2019.csv")
+attach(epa)
+```
+
+`Displ` is a numerical variable, so we can include that in our model as usual.
+
+However, `Veh Class` is nominal, so we know `R` will need to create dummy variables for us. Let's see how many different classes there are.
+
+```{r}
+unique(epa$`Veh Class`)
+```
+
+Wow, for `Veh Class` we have 10 choices so we'll need 9 dummy variables. (Do you see why?) Luckily `R` will take care of this for us.
+
+We generate the linear model below.
+
+```{r}
+summary(lm(`Cmb MPG` ~ Displ + `Veh Class`))
+```
+
+As expected there are 9 dummy variables for `Veh Class`.
+
+Notice that three of the dummy variables for `Veh Class` are not significant. However, we cannot remove just one of the dummy variables.  We need to keep all or none of them. In other words, either `Veh Class` is significant or it is not. In this case, since most of the dummy variables have very small p-values we will keep them.
+
+Consider what happens if we add `Cert Region`, the certification region. I would expect this not to be related to mpg, but let's check.
+```{r}
+summary(lm(`Cmb MPG` ~ Displ + `Veh Class` + `Cert Region`))
+```
+
+Here we see the dummy variable for `Cert Region` is not significant, so we should remove it from our model.
+
+## Practice
+Now use the EPA data to try to create a better model. We've decided that `displ` and `Veh Class` make sense to include while `Cert Region` does not. Consider the other variables in this data set and create a model using all the variables that seem most appropriate. Use backward elimination to refine your model.
+
+Note: You should likely not include `Hwy MPG` or `City MPG` because `Cmb MPG` is just a combination of the two of them. Instead, use characteristics of the vehicle to try and predict `Cmb MPG`.

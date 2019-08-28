@@ -1,5 +1,5 @@
 ---
-title: "Assessing Model Fit and Effect Size"
+title: "Creating Models for Research"
 output:
   html_document: default
 ---
@@ -46,12 +46,14 @@ Notice our adjusted-$R^2$ decreased slightly, but the overall p-value is smaller
 ## Backward Elimination
 The process we just used is called **backward elimination**. Here's how it works.
 
-1. Create a model with all the predictor variables.
+1. Create a model with all the predictor variables that could reasonably be included.
 2. Find the variable with the largest p-value.  If it is larger than our threshold (we will use 0.05) then that variable is eliminated from our model.
 3. Create a new model with the remaining variables and repeat until all remaining variables have p-values less than the threshold.
 
+In fact there are several techniques that could be used to decide on which predictors are most appropriate to keep, but we will focus on using backward elimination.
+
 ## Another example
-Let's say an antique clock dealer has collected data on recent auctions of grandfather clocks. The variables are `Price`: final selling price, `Bidders`: the number of bidders, `Age`: the age of the clock, `Temp`: the outside temperature the day of the auction.
+Imagine an antique clock dealer has collected data on recent auctions of grandfather clocks. The variables are `Price`: final selling price, `Bidders`: the number of bidders, `Age`: the age of the clock, `Temp`: the outside temperature the day of the auction.
 ```{r}
 clocks <- read_csv("auction.csv");
 ```
@@ -61,7 +63,7 @@ Let's check the correlations of these variables.
 cor(clocks)
 ```
 
-We are most interested in what correlates well with `Price`.  IT looks like `Temp` has the least correlation.
+We are most interested in what correlates well with `Price`. It looks like `Temp` has the least correlation.
 
 We can create a model with all these variables.
 ```{r}
