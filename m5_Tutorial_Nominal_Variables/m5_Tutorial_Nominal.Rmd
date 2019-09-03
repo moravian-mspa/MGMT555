@@ -87,7 +87,7 @@ Did you notice that the only thing really changing is the constant term?  The co
 
 The file "EPA gasoline rating 2019.csv"^[EPA (2019). Fuel Economy Data Set [Data File]. Accessed at https://www.fueleconomy.gov/feg/download.shtml] contains data about 2019 model year vehicles collected by the Enivronmental Protection Agency along with the EPA miles per gallon fuel efficiency ration. This data set includes gasoline powered vehicles only. The accompanying text file includes descriptions of each variable.
 
-In particular, I might like to know, whic variables affect MPG rating? For the purposes of this example, let's focus on just a couple that seem most obvious. We'll use `Displ` since engine size should affect fuel economy, and we'll use `Veh Class` since that's a nominal variable, and it seems likely that will affect mpg as well.
+In particular, I might like to know, which variables affect MPG rating? For the purposes of this example, let's focus on just a couple that seem most obvious. We'll use `Displ` since engine size should affect fuel economy, and we'll use `Veh Class` since that's a nominal variable, and it seems likely that will affect mpg as well.
 
 
 ```{r}

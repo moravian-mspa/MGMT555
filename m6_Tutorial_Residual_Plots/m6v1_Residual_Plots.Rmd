@@ -78,4 +78,34 @@ This model appears to satisfy all the assumptions of linear regression. I would 
 
 
 
+## EPA Data
+In a Week 5 tutorial we used the file "EPA gasoline rating 2019.csv"^[EPA (2019). Fuel Economy Data Set [Data File]. Accessed at https://www.fueleconomy.gov/feg/download.shtml] contains data about 2019 model year vehicles collected by the Enivronmental Protection Agency along with the EPA miles per gallon fuel efficiency ration. This data set includes gasoline powered vehicles only.
+
+```{r}
+epa <- read_csv("EPA gasoline rating 2019.csv")
+attach(epa)
+```
+
+Let's try a relatively simple model using `Displ` and `Veh Class` to predict `Cmb MPG`.
+
+```{r}
+epaModel <- lm(`Cmb MPG` ~ Displ + `Veh Class`)
+summary(epaModel)
+```
+
+First a residual vs fitted plot.
+```{r}
+plot(resid(epaModel) ~ fitted(epaModel))
+```
+
+That does not look very good. The variation in the residiuals changes quite a bit (heteroscedasticity) and we see a clear funnel effect in the plot. Assumption #4 is not met.
+
+Now a normal probability plot.
+```{r}
+qqPlot(resid(epaModel))
+```
+
+Yikes. This is not a good plot at all. A significant portion of the data leaves the confidence band. The errors are not normally distributed. Assumption #3 is not met.
+
+Overall this model has too many problems. I would not recommend using this model as it is. It will likely not accurately predict our dependent variable.
 
