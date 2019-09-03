@@ -1,8 +1,8 @@
 ---
-title: "Analyzing Residual Plots"
+title: "Residual Plots in R"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -105,7 +105,9 @@ Now a normal probability plot.
 qqPlot(resid(epaModel))
 ```
 
-Yikes. This is not a good plot at all. A significant portion of the data leaves the confidence band. The errors are not normally distributed. Assumption #3 is not met.
+Yikes. This is not a good plot at all. A significant portion of the data on the right leaves the confidence band. The errors are not normally distributed. Assumption #3 is not met.
+
+Note I would not be overly concerned aobu the left side of the plot, but the right side is really just terrible.
 
 Overall this model has too many problems. I would not recommend using this model as it is. It will likely not accurately predict our dependent variable.
 
