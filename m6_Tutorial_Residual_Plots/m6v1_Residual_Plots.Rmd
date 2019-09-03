@@ -1,0 +1,81 @@
+---
+title: "Analyzing Residual Plots"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+library(tidyverse)
+```
+
+You should have watched the video on checking regression assumptions. In the video you saw how residual plots are useful in verifying several of the requirements for a regression analysis. Here we will practice using R to generate those plots.
+
+## A Clock Example
+Remember our clock dealer from last week? Imagine an antique clock dealer has collected data on recent auctions of grandfather clocks. The variables are `Price`: final selling price, `Bidders`: the number of bidders, `Age`: the age of the clock, `Temp`: the outside temperature the day of the auction, and `Condition`: the condition of the clock.
+
+```{r}
+clocks <- read_csv("auctionExtra.csv");
+```
+
+### Generate the model
+Recall from last time we decided the appropriate variables were `Age`, `Bidders`, and `Condition`.
+
+```{r}
+clockModel <- lm(Price ~ Age + Bidders + Condition, data=clocks)
+summary(clockModel)
+```
+
+
+### Checking assumptions
+Recall the assumptions for a multiple linear regression are:
+
+1. The relationship between the dependent variable and each predictor variable is linear
+2. The errors (residuals) are independent
+3. The errors (residuals) at each predictor value are normally distributed
+4. The errors (residuals) have equal variance across predictors (homoscedasticity)
+
+### Residuals vs Fitted values for #1 and #4
+We can check assumption #1 and #4 using a scatterplot with the fitted (ie predicted) values for each data point on the horizontal axis and the residual (ie error) associated with that data point on the vertical axis.
+
+```{r}
+plot(resid(clockModel) ~ fitted(clockModel), main="Residuals vs Fitted")
+```
+
+If #1 is true, then we should see no clear pattern in this plot.  That seems to be the case here.
+
+If #4 is true, then we should see a roughly constant spread as we move left to right across the plot. That seems to be the case here.
+
+Recall from the video, in this first residual plot we want to see no systematic pattern (this would indicate a non-linear relationship in the data). Also, we want a scatter plot with even variation throughout (to ensure homoscedacticity).
+
+
+
+### Checking independence of redsiduals for #2
+Since we are not given any indication of what order this data was collected in, we cannot do a plot of residuals vs order. It seems plausible that these auctions were independent though, so we will proceed with the model.
+
+Remember, the type of plot discussed in the video only makes sense if your data was collected in some sort of clear order.  If there is no order then simply consider how the data was collected and ask if it seems plausible that the values are independent.
+
+
+### Normally distributed errors for #3
+To test the assumption that the residuals are normally distributed, we can check [a normal probability plot](https://newonlinecourses.science.psu.edu/stat501/node/281/). Recall we did this earlier with simple linear regression and we loaded the `car` package. 
+
+```{r}
+library(car)
+```
+
+If that command gives an error it means you haven't installed the library yet. Go to the Tools menu, select Install Packages, then type `car` in the search box and click Install.
+
+Once you have the car package loaded successfully, the command below produces the normal quantile plot for the residuals along with a reference line and confidence bands.  We hope the points are close to the reference line and within the dashed lines. (note the capital P in the command name)
+```{r}
+qqPlot(resid(clockModel), main="Normal Probability Plot of Residuals")
+```
+
+This is a good normal probability plot. All the points lie within the dashed confidence band. We can assume the residuals are  normally distributed.
+
+### Summary
+This model appears to satisfy all the assumptions of linear regression. I would be confident in using this model.
+
+
+
+
