@@ -1,0 +1,21 @@
+Gasoline vehicles only
+
+EPA (2019). Fuel Economy Data Set [Data File]. Accessed at https://www.fueleconomy.gov/feg/download.shtml
+
+Model	
+Displ		Engine displacement
+Cyl		Number of cylinders in the engine
+Trans		Transmission type
+Drive		Drive-train type
+Cert Region	Region of vehicle emissions certification
+Stnd		Standard used in testing
+Stnd Description	
+Underhood ID	
+Veh Class	Vehicle type
+Air Pollution Score	
+City MPG	City mpg rating
+Hwy MPG	Highway mpg rating
+Cmb MPG	combined rating
+Greenhouse Gas Score	
+SmartWay	Whether or not vehicle received EPA SmartWay designation
+Comb CO2	Combined City and Highway CO2 emissions
