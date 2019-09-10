@@ -1,5 +1,5 @@
 ---
-title: "Residual Plots in R"
+title: "Addressing Model Problems"
 output:
   html_document: default
   pdf_document: default
