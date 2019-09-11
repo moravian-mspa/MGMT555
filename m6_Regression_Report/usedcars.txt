@@ -1,0 +1,12 @@
+
+This dataset contains details on several used car sales. The variables are as follows:
+
+year		Model year of the car
+model		Trim level of the car
+price		Sale price
+mileage		How many miles the car has been driven
+color		Color of the car
+transmission	Transmission type, either AUTO or MANUAL
+
+
+retrieved from: https://www.engineeringbigdata.com/datasets/
