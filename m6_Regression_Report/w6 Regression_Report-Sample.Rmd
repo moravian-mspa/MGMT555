@@ -1,0 +1,132 @@
+---
+title: "Week 6 Regression Report Sample"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+```
+
+For this sample report, I'll use a portion of `R`'s built-in data set `mtcars`. I created a data file with five of the variables from that set for the purposes of this sample report.
+
+## Question
+Can we predict the mpg of a car from its engine displacement, horsepower, weight, and number of gears?
+
+## Understanding the Data
+
+We load the data set.
+```{r, message=FALSE}
+library(tidyverse)
+```
+
+
+```{r}
+myData <- read_csv("carmpg.csv")
+attach(myData)
+head(myData)
+```
+
+
+```{r}
+summary(myData)
+```
+
+The variable `gear` only has three values which seems to suggest that we should treat it as a categorical variable, not numerical. We can tell `R` to do this by specifying that `gear` is a factor. This will tell `R` to create dummy variables when making the model.
+```{r}
+new_gear <- factor(gear)
+```
+
+We check the correlation between the other variables.
+```{r}
+cor( data.frame(mpg, disp, hp, wt) )
+```
+
+These all seem to have fairly stron linear relationships to `mpg`.
+
+We will the scatterplots now.
+```{r}
+plot(mpg ~ disp)
+plot(mpg ~ hp)
+plot(mpg ~ wt)
+```
+
+Displacement and horsepower both show some non-linearity. We will transform both and then attempt to build the model.
+
+```{r}
+new_disp <- log(disp)
+new_hp <- log(hp)
+
+plot(mpg ~ new_disp)
+plot(mpg ~ new_hp)
+```
+
+These scatterplots show a much more linear relationship. We check the correlation coefficients to verify:
+```{r}
+cor( data.frame(mpg, new_disp, new_hp, wt) )
+```
+
+The correlation coefficients for `mpg` with both `new_disp` and `new_hp` have increased.
+
+## Building the Model
+
+Finally we are ready to generate our first model. We will use all variables initially then use backward elimnation to remove unnecessary variables.
+```{r}
+mpgModel <- lm( mpg ~ new_disp + new_hp + wt + new_gear)
+summary(mpgModel)
+```
+
+The variable `new_gear` is the least significant, so we remove it first.
+
+```{r}
+mpgModel <- lm( mpg ~ new_disp + new_hp + wt)
+summary(mpgModel)
+```
+
+The transformed displacement does not seem significant. We remove it.
+
+```{r}
+mpgModel <- lm( mpg ~ new_hp + wt)
+summary(mpgModel)
+```
+
+Both of the remaingin variables and the model overall are significant. 
+
+## Model Assumptions
+
+We will check model assumptions to see if any more transformations are necessary. 
+
+```{r}
+plot(resid(mpgModel) ~ fitted(mpgModel), main="Residual vs Fitted")
+```
+
+This is not terrible, but not perfect either. There seems to be some nonlinearity, but the variance seems roughly equal.
+
+```{r, message=FALSE}
+library(car) # this library lets me make the nice plot with dashed lines
+qqPlot(resid(mpgModel))
+```
+
+There are a several points on the large end that leave the dashed lines. This combined with the residual plot above indicates a data transformation would be helpful. We will perform a `log` transformation on the response variable.
+
+```{r}
+newMpg <- log(mpg)
+new_mpgModel <- lm(newMpg ~ new_hp + wt)
+summary(new_mpgModel)
+```
+
+So far the model looks better with a slightly larger adjusted R-squared and even smaller p-values for several of the variables. Let's check the model assumptions with some residual plots.
+
+```{r}
+plot(resid(new_mpgModel) ~ fitted(new_mpgModel))
+qqPlot(new_mpgModel)
+```
+
+These both seem improved. There is no more non-linearity in the residual plots. The normal-probability plot has most of the points very close to the straight line. This seems to be the best model we can construct from this dataset.
+
+## Conclusion
+
+Overall the model meets all assumptions and the R-squared value is rather high at 88%. We should be confident in using this model to predict mpg for cars based on their weight and horsepower.
+
+
