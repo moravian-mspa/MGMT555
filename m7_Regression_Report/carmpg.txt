@@ -1,0 +1,12 @@
+This data is from R's built-in mtcars set.
+
+Description
+
+The data was extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973–74 models).
+
+mpg	Miles/(US) gallon
+disp	Displacement (cu.in.)
+hp	Gross horsepower
+wt	Weight (1000 lbs)
+gear	Number of forward gears
+
