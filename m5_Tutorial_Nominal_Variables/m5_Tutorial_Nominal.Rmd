@@ -1,6 +1,7 @@
 ---
 title: "Dealing with Dummy Variables"
 output:
+  pdf_document: default
   html_document: default
 ---
 

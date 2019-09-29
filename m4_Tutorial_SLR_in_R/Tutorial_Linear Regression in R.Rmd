@@ -1,7 +1,8 @@
 ---
 title: "Simple Linear Regression in RStudio"
 output:
-  html_document
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -127,7 +128,7 @@ Going forward I suggest you always load the `car` package and use the `qqPlot` c
 
 ### Our conclusion
 
-Overall we can use this model, but should expect some uncertainty with our predictions since our $R^2$ indicates this one predictor does not perfectly explain the variation in hours.
+Overall we can use this model, but should expect some uncertainty with our predictions since our $R^2$ indicates this one predictor does not perfectly explain the variation in price.
 
 ## Make our prediction
 We were asked to predict the selling price of a 160 year old clock, so we need to see what our model says when `Age` = 160.  Recall the model was `Price = -191.66 + 10.48 * Age`.  The code below computes our answer.
