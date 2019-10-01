@@ -1,6 +1,7 @@
 ---
 title: "Creating Models for Research"
 output:
+  pdf_document: default
   html_document: default
 ---
 

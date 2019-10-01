@@ -1,6 +1,7 @@
 ---
 title: "Multiple Regression in R"
 output:
+  pdf_document: default
   html_document: default
 ---
 
