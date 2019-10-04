@@ -1,4 +1,4 @@
-year,model,price,mileage,color,transmission
+year,car_model,price,mileage,color,transmission
 2011,SEL,21992,7413,Yellow,AUTO
 2011,SEL,20995,10926,Gray,AUTO
 2011,SEL,19995,7351,Silver,AUTO

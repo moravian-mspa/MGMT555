@@ -2,7 +2,7 @@
 This dataset contains details on several used car sales. The variables are as follows:
 
 year		Model year of the car
-model		Trim level of the car
+car_model		Trim level of the car
 price		Sale price
 mileage		How many miles the car has been driven
 color		Color of the car
