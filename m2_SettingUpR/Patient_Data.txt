@@ -1,0 +1,9 @@
+ID Number
+Gender 					(M/F)
+Marital Status 			M-Married, S-Single, D-Divorced, W-Widowed
+Age						in years
+Weight 					in Pounds
+Total Cholesterol		in mg/dL
+Systolic Blood Press 	in mmHg
+
+Made available for use by Hawkes Learning. Retrieved from https://www.hawkeslearning.com/Statistics/datasets/BEG_Datasets/Patient_Data.csv

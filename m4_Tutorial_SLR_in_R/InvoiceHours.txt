@@ -1,0 +1,6 @@
+Day		Day of study
+Invoices_Processed		Number of invoices processed that day
+Hours		Time spent
+
+
+Synthetic data

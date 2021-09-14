@@ -1,0 +1,94 @@
+---
+title: "Week 7 Plugging Values into a Model"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+```
+
+## Transformed Predictor Variables
+
+For this sample report, I'll use a portion of `R`'s built-in data set `mtcars`. I created a data file with five of the variables from that set for the purposes of this sample report.
+
+We load the data set.
+```{r, message=FALSE}
+library(tidyverse)
+```
+
+```{r}
+myData <- read_csv("carmpg.csv")
+attach(myData)
+head(myData)
+```
+
+The variable `gear` only has three values which seems to suggest that we should treat it as a categorical variable, not numerical. We can tell `R` to do this by specifying that `gear` is a factor. This will tell `R` to create dummy variables when making the model.
+```{r}
+nominal_gear <- factor(gear)
+```
+
+When checking correlations, I found displacement and horsepower both show some non-linearity. We will transform both and then attempt to build the model.
+
+```{r}
+ln_disp <- log(disp)
+ln_hp <- log(hp)
+```
+
+You can verify that the new scatterplots show a much more linear relationship and the correlation coefficients for `mpg` with both `ln_disp` and `ln_hp` have increased.
+
+## Building the Model
+
+Let's construct a model and attempt to make a prediction from it. For the purposes of this exercise, I'm not going to worry about which variables are significant.
+```{r}
+mpgModel <- lm( mpg ~ ln_disp + ln_hp + wt + nominal_gear)
+mpgModel
+```
+
+Now let's predict the mpg for a car with displacement 200, 150 horsepower, weight 3.5, and 4 gears. Be careful when plugging in since some of these are transformed. In particular, note the quotes around the nominal variable.
+```{r}
+values <- data.frame( ln_disp = log(200), ln_hp = log(150), wt=3.5, nominal_gear = "4")
+predict(mpgModel, values, interval="predict")
+```
+
+## Other transformations
+
+What if we've created a model where we transformed the response variable?
+With the Mammal Gestation data in [Example 9-2](https://newonlinecourses.science.psu.edu/stat501/lesson/9/9.2#paragraph--756) of [Chapter 9 in the Penn State e-book](https://newonlinecourses.science.psu.edu/stat501/lesson/9) on regression, the authors conclude the only problem with the data is unequal variances in the errors. They decide to transform the response variable to address this problem.
+
+Let's load the data, apply a `log` transformation to the response variable, then generate the new model.
+```{r message=FALSE}
+gest <- read_csv("mammgest.csv")
+attach(gest)
+```
+
+```{r}
+ln_Gestation <- log(Gestation)
+gest_NEWmodel <- lm( ln_Gestation ~ Birthwgt)
+gest_NEWmodel
+```
+
+
+Let's make a prediction for a birthweight of 45.
+```{r}
+predict( gest_NEWmodel, data.frame( Birthwgt = 45) )
+```
+
+Now is this the prediction for gestation length?  No, its the prediction for `ln_Gestation`
+
+```{r}
+exp(5.747278)
+```
+
+How about a prediction interval?
+```{r}
+predict( gest_NEWmodel, data.frame( Birthwgt = 45), interval = "predict" )
+```
+
+```{r}
+exp(5.234582)
+exp(6.259974)
+```
+
+So our prediction interval is between 187.6507 and 523.2053.
