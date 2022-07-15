@@ -1,4 +1,4 @@
-ID Number,Gender,Marital Status,Age,Weight,Total Cholesterol,Systolic Blood Press
+ID Number,Gender,Marital.Status,Age,Weight,Total.Cholesterol,Systolic.Blood.Press
 001,F,D,28,99,192,110
 002,F,S,19,102,191,123
 003,F,S,19,104,184,117
