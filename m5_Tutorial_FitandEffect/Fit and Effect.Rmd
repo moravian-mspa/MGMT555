@@ -1,8 +1,11 @@
 ---
 title: "Assessing Model Fit and Effect Size"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document:
+fontsize: 12pt
+header-includes:
+   - \usepackage{fourier}
 ---
 
 ```{r setup, include=FALSE}
@@ -30,14 +33,14 @@ $H_0$: this coefficient is 0
 $H_a$: this coefficient is not 0  
 If we fail to reject the null hypothesis, then we do not have evidence that this variable is useful to the model.
 
+After all, if the coefficient on one of our variables is 0 then that means that variable does not appear in our model at all!
 
 Let's revisit the advertising data.  Recall, we have data from a hypothetical company's advertising spending and sales for the last three years.  The variables are `TV`, `Radio`, and `Newspaper` which are the amount spent on the respective ads in thousands of dollars.  The final variable is `Sales` which is that month's sales in units.
 
-Download the data and import it to RStudio. ( https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m5_Tutorial_FitandEffect/Advertising.csv )Ò
+Import the data to R using this URL: https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m5_Tutorial_FitandEffect/Advertising.csv
 ```{r}
 library(tidyverse)
-Advertising <- read_csv("Advertising.csv");
-attach(Advertising)
+Advertising <- read_csv("https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m5_Tutorial_FitandEffect/Advertising.csv");
 head(Advertising)
 ```
 
@@ -47,7 +50,7 @@ We create a model of the form:
 </center>
 
 ```{r}
-model <- lm(Sales ~ TV + Newspaper + Radio);
+model <- lm(Sales ~ TV + Newspaper + Radio, data=Advertising)
 summary(model)
 ```
 
@@ -61,20 +64,17 @@ $H_a:$ at least one $b_i \neq 0$
 
 You may recall from our review of ANOVA at the beginning of the course that those are typical hypotheses for an ANOVA test.  In fact `R` conducts the test for us and includes the F statistic and p-value in the last line of the summary above.  In this case we see a p-value of $3.38 \times 10^{-14}$ which is very small, so we have strong evidence to reject the null hypothesis.  We have strong evidence that at least one of the coefficients should not be 0. 
 
-
-
 2. **Is there also evidence that each individual coefficient is non-zero?**
 
 We will have a set of hypotheses for each coefficient.  That is, for $i=0,1,2,3$:  
 $H_0: b_i=0$  
 $H_a: b_i\neq 0$
 
-These are set up to easily use a $t$-test.  `R` runs the test and reports the $t$ statistic as well as the p-value for each coefficient.  Notice the p-value for each coefficent is quite small except for the `Newspaper` row which has a p-value of 0.478.  
+These are set up to easily use a $t$-test.  R runs the test and reports the $t$ statistic as well as the p-value for each coefficient.  Notice the p-value for each coefficient is quite small except for the `Newspaper` row which has a p-value of 0.478.  
 
 So for `Newspaper` we fail to reject the null hypothesis.  We do not have evidence that `Newspaper` is useful in this model.
 
 For all the other variables we have strong evidence to reject the null hypothesis.  We have strong evidence that each of those variables is useful in this model.
-
 
 
 ## Effect Size
@@ -85,13 +85,13 @@ Next we consider the effect size.  The statistic we use to measure this is the c
 
 Recall, $R^2$ tells us the proportion of variation in the response variable explained by the linear relationship to the predictor variables.  So it quantifies how well the model explains what is happening with the response variable.
 
-Looking at our `R` output above we see there are two $R^2$ statistics given.  The problem with $R^2$ is that adding more variables will always cause it to increase.  If we add more degrees of freedom to our model, more "wiggle room" if you will, then we can always make our model approximate the data more closely.  In fact, potentially, if we add enough variables we will match the data perfectyl!
+Looking at our R output above we see there are two $R^2$ statistics given.  The problem with $R^2$ is that adding more variables will always cause it to increase. If we add more degrees of freedom to our model, more "wiggle room" if you will, then we can always make our model approximate the data more closely. In fact, potentially, if we add enough variables we will match the data perfectly!
 
 **However**, that's not necessarily a good thing.  Remember, the data you have is a sample and our goal is not to create a model that perfectly predicts the sample, but rather one that is useful in predicting what will happen beyond the sample.  A model that perfectly matches the sample data might not be useful at all when looking beyond the sample -- the model might too closely model the randomness in the data.  This is called 'overfitting the model'.
 
-So we want to try and avoid both too many, and too few predictor variables.  To balance the tendancy of $R^2$ to increase as we add more variables we use the adjusted-$R^2$.  You saw the formula in your reading, and you likely noticed that the formula takes into account the number of predictors we are using relative to the number of data points we have.
+So we want to try and avoid both too many, and too few predictor variables.  To balance the tendency of $R^2$ to increase as we add more variables we use the adjusted-$R^2$.  You saw the formula in your reading, and you likely noticed that the formula takes into account the number of predictors we are using relative to the number of data points we have.
 
-Typically we will let `R` compute this for us and in fact for the example above we see an adjusted-$R^2$ of 0.8564 which is smaller than the unadjusted value.
+Typically we will let R compute this for us and in fact for the example above we see an adjusted-$R^2$ of 0.8564 which is smaller than the un-adjusted value.
 
 ### Interpeting adjusted-$R^2$
 
@@ -99,13 +99,13 @@ Remember, adjusted-$R^2$ tells us what percent of the variation in `Sales` is ex
 
 High $R^2$ values mean the model does a good job explaining what is happening with the response variable.  This means we should feel confident in using our model to make predictions.
 
-Low $R^2$ values essentially mean there are things happening with our response variable which are not accounted for in the model.  This might indicate there are other variables which should be added to the model.  However, even if our model has a low $R^2$ and we don't have other variables to add to it, the interpretation of the coefficients on any significant predictor variables will still hold.  Recall that, for instance, the coeffcient on the `TV` term above tells us how `Sales` will increase as we increase `TV` spending.
+Low $R^2$ values essentially mean there are things happening with our response variable which are not accounted for in the model.  This might indicate there are other variables which should be added to the model.  However, even if our model has a low $R^2$ and we don't have other variables to add to it, the interpretation of the coefficients on any significant predictor variables will still hold.  Recall that, for instance, the coefficient on the `TV` term above tells us how `Sales` will increase as we increase `TV` spending.
 
 To summarize the ideas here:
 
 * Low $R^2$: If any predictor variables are significant we can still use their coefficients to help us understand how quickly the response variable responds to changes in those variables.  However, any predictions the model makes will be suspect.
 
-* High $R^2$: great!  We can use the coefficients on any signifcant predictor variables as above, **and** we can use our model to make predictions.
+* High $R^2$: great!  We can use the coefficients on any significant predictor variables as above, **and** we can use our model to make predictions.
 
 For our example above, where we had adjusted-$R^2$ of 0.8564, this is a relatively large $R^2$, so I would use this model to make predictions.  However, since we saw that `Newspaper` is not significant, we could likely improve our model by removing it.  We'll talk more about that idea soon.
 
@@ -115,9 +115,9 @@ Let's consider one more example and assess the model's fit and effect size.
 We have data from 2014 housing sales in King County, WA, USA^[Harlfoxem. (2016). *House Sales in King County, USA, Version 1* [Data file]. Retrieved from https://www.kaggle.com/harlfoxem/housesalesprediction/downloads/housesalesprediction.zip/1].  Three of the variables are sale price (`price`), square feet of living space (`sqft_living`), and the size of the lot (`sqft_lot`).  
 
 
-Download the data and import it to RStudio. ( https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m5_Tutorial_FitandEffect/kc_HouseSales.csv )
+Import the data to your R notebook using the URL:  https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m5_Tutorial_FitandEffect/kc_HouseSales.csv 
 ```{r  message=FALSE}
-HouseSales <- read_csv("kc_HouseSales.csv")
+HouseSales <- read_csv("https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m5_Tutorial_FitandEffect/kc_HouseSales.csv")
 ```
 
 
@@ -140,7 +140,7 @@ Each variable is significant.  All p-values are quite small, so we have strong e
 
 **Interpret Adjusted $R^2$**
 
-The adjusted $R^2$ for the model is 0.4938.  This indicates that less than 50% of the variation in `price` is accounted for in this model.  That is not encouraging, so I would not use this model for any sort of precise predictions.  However, since each variable is significant, we can interpret their coeffcients.
+The adjusted $R^2$ for the model is 0.4938.  This indicates that less than 50% of the variation in `price` is accounted for in this model.  That is not encouraging, so I would not use this model for any sort of precise predictions.  However, since each variable is significant, we can interpret their coefficients.
 
 * For every additional 1 square foot of living space we expect the house price to increase by $283.
 * For every additional 1 square foot of lot size we expect the house price to *decrease* by $0.29. 
