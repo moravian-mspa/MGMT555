@@ -14,7 +14,7 @@ Before beginning to read this tutorial, be sure to have read Chapter 3 in the Li
 
 ## The Setup
 
-An antique dealer who specializes in antique clocks would like to predict how much some of the clocks in her inventory will sell for at auction. She collects recent sales data from 32 grandfater clocks and would like to use the data to create a model for determining a selling price. The data can be found in `auction.csv`^[Mendenhall, W, and Sincich, TL (1993). Selling Price of Antique Grandfather Clocks [Data File]. Accessed at http://www.statsci.org/data/general/auction.txt].
+An antique dealer who specializes in antique clocks would like to predict how much some of the clocks in her inventory will sell for at auction. She collects recent sales data from 32 grandfater clocks and would like to use the data to create a model for determining a selling price. The data can be found in [`auction.csv`](https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m4_Tutorial_SLR_in_R/auction.csv)^[Mendenhall, W, and Sincich, TL (1993). Selling Price of Antique Grandfather Clocks [Data File]. Accessed at http://www.statsci.org/data/general/auction.txt]. We also have a [detailed description of the data](https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m4_Tutorial_SLR_in_R/auction.txt).
 
 Let's try to help the dealer create a model.
 
@@ -34,12 +34,9 @@ As always, I'll begin by loading our standard helper library
 library(tidyverse)
 ```
 
-Now let's read the data from the given data file.  Use the Files tab, navigate to the where you downloaded the file and click it to import.  You can look at the data in the tab that pops up.  I'll use `head` here to display the first few rows.  I'll also `attach` the data set for convenience.
-```{r echo = FALSE, message=FALSE}
-auction <- read_csv("auction.csv")
-```
+Now let's read the data from the given data file.  Use the Files tab, navigate to the where you downloaded the file and click it to import.  You can look at the data in the tab that pops up.  I'll use `head` here to display the first few rows. 
 ```{r}
-attach(auction)
+auction <- read_csv("https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m4_Tutorial_SLR_in_R/auction.csv")
 head(auction)
 ```
 
@@ -48,7 +45,7 @@ This looks like every row is one day, and each column is one variable.  That's t
 ## Make a Scatterplot
 A good first step is to look at a scatter plot and decide if the relationship looks in any way linear.  Note the nice title added to the plot:
 ```{r}
-plot(Price ~ Age, main="Auction Price vs Clock Age")
+plot(Price ~ Age, data=auction, main="Auction Price vs Clock Age")
 ```
 
 The plot is somewhat linear with no obvious curved pattern, so it makes sense to try and use a linear model.  
@@ -56,7 +53,7 @@ The plot is somewhat linear with no obvious curved pattern, so it makes sense to
 ## Generate the model
 Let's move on to generating the linear regression model.  The first line will generate a linear model with `Price` as the dependent variable (y), and `Age` as the predictor variable (x).  The second line prints a summary of the model.
 ```{r}
-auction_lm <- lm(Price ~ Age)
+auction_lm <- lm(Price ~ Age, data=auction)
 summary(auction_lm)
 ```
 
@@ -70,7 +67,7 @@ The model is `Price = -191.66 + 10.48 * Age`.
 
 If you'd like a plot with the 'best fit' line you can execute these next two lines in the same code block.
 ```{r}
-plot(Price ~ Age, main="Auction Price vs Clock Age")
+plot(Price ~ Age, data=auction, main="Auction Price vs Clock Age")
 abline(auction_lm)
 ```
 
