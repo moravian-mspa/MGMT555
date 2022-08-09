@@ -2,7 +2,7 @@
 title: "Dealing with Dummy Variables"
 output:
   html_document: default
-  pdf_document
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
