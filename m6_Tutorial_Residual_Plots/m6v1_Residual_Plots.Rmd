@@ -1,13 +1,14 @@
 ---
 title: "Residual Plots in R"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment = NA)
 library(tidyverse)
+library(car)
 ```
 
 You should have watched the video on checking regression assumptions. In the video you saw how residual plots are useful in verifying several of the requirements for a regression analysis. Here we will practice using R to generate those plots.
@@ -16,7 +17,7 @@ You should have watched the video on checking regression assumptions. In the vid
 Remember our clock dealer from last week? Imagine an antique clock dealer has collected data on recent auctions of grandfather clocks. The variables are `Price`: final selling price, `Bidders`: the number of bidders, `Age`: the age of the clock, `Temp`: the outside temperature the day of the auction, and `Condition`: the condition of the clock.
 
 ```{r}
-clocks <- read_csv("auctionExtra.csv");
+clocks <- read_csv("https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m6_Tutorial_Residual_Plots/auctionExtra.csv");
 ```
 
 ### Generate the model
@@ -64,8 +65,6 @@ To test the assumption that the residuals are normally distributed, we can check
 library(car)
 ```
 
-If that command gives an error it means you haven't installed the library yet. Go to the Tools menu, select Install Packages, then type `car` in the search box and click Install.
-
 Once you have the car package loaded successfully, the command below produces the normal quantile plot for the residuals along with a reference line and confidence bands.  We hope the points are close to the reference line and within the dashed lines. (note the capital P in the command name)
 ```{r}
 qqPlot(resid(clockModel), main="Normal Probability Plot of Residuals")
@@ -82,14 +81,13 @@ This model appears to satisfy all the assumptions of linear regression. I would 
 In a Week 5 tutorial we used the file "EPA gasoline rating 2019.csv"^[EPA (2019). Fuel Economy Data Set [Data File]. Accessed at https://www.fueleconomy.gov/feg/download.shtml] contains data about 2019 model year vehicles collected by the Enivronmental Protection Agency along with the EPA miles per gallon fuel efficiency ration. This data set includes gasoline powered vehicles only.
 
 ```{r}
-epa <- read_csv("EPA gasoline rating 2019.csv")
-attach(epa)
+epa <- read_csv("https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m6_Tutorial_Residual_Plots/EPA_gasoline_rating_2019.csv")
 ```
 
 Let's try a relatively simple model using `Displ` and `Veh Class` to predict `Cmb MPG`.
 
 ```{r}
-epaModel <- lm(`Cmb MPG` ~ Displ + `Veh Class`)
+epaModel <- lm(`Cmb MPG` ~ Displ + `Veh Class`, data=epa)
 summary(epaModel)
 ```
 
@@ -107,7 +105,7 @@ qqPlot(resid(epaModel))
 
 Yikes. This is not a good plot at all. A significant portion of the data on the right leaves the confidence band. The errors are not normally distributed. Assumption #3 is not met.
 
-Note I would not be overly concerned aobu the left side of the plot, but the right side is really just terrible.
+Note I would not be overly concerned about the left side of the plot, but the right side is really just terrible.
 
 Overall this model has too many problems. I would not recommend using this model as it is. It will likely not accurately predict our dependent variable.
 
