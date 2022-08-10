@@ -1,8 +1,8 @@
 ---
 title: "Addressing Model Problems"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -19,7 +19,7 @@ In this tutorial I will work through several of the examples that you read about
 
 
 ## Rule of Thumb
-Before we begin, keep in minde the following general rules when to trying to fix problems with model assumptions:
+Before we begin, keep in mind the following general rules when trying to fix problems with model assumptions:
 
 * To fix problems with non-linear relationships try transforming the affected predictor variables
 * To fix problems with error terms that are non-linear, non-normal, or have non-constant variance try transforming the response variable.
@@ -31,19 +31,19 @@ With the Word Recall data from [Example 9-1](https://newonlinecourses.science.ps
 
 First, let's load the dataset and then recreate the initial linear model, residual plot, and normal probability plot from the text.
 ```{r}
-wordRecall <- read_csv("wordrecall.csv")
-attach(wordRecall)
-wordRecall_model <- lm(prop ~ time)
+wordRecall <- read_csv("https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m6_Tutorial_Addressing_Model_Problems/wordrecall.csv")
+
+wordRecall_model <- lm(prop ~ time, data=wordRecall)
 plot(resid(wordRecall_model) ~ fitted(wordRecall_model), main="Residual Plot, Original Data")
 qqPlot(resid(wordRecall_model), main="Normal Probability Plot, Original Data")
 ```
 
 Just as we saw in the reading, the residual plot is not good because it shows a clear non-linear pattern. The normal probability plot is fine indicating the errors are normally distributed.
 
-Ok, so we identified the problem, now to fix it we saw in the text that we needed to apply a `log` transformation to the predictor variable, `time`. Note that `R` uses the function `log` for the natural logarithm that was discussed in the text. So we create a new data vector containing the transformed data, then create a new linear model.
+Ok, so we identified the problem, now to fix it. We saw in the text that we needed to apply a `log` transformation to the predictor variable, `time`. Note that `R` uses the function `log` for the natural logarithm that was discussed in the text. So we create a new data vector containing the transformed data, then create a new linear model.
 ```{r}
-lntime <- log(time) # natural log of time
-wordRecall_NEWmodel <- lm(prop ~ lntime)
+lntime <- log(wordRecall$time) # natural log of time
+wordRecall_NEWmodel <- lm(prop ~ lntime, data=wordRecall)
 plot(resid(wordRecall_NEWmodel) ~ fitted(wordRecall_NEWmodel), main="Residual Plot, Transformed Predictor")
 ```
 
@@ -56,11 +56,11 @@ coefficients(wordRecall_NEWmodel)
 ```
 
 Keep in mind, the equation from this model is 
-$$prop = 0.846 - 0.079* \ln(time)$$
+$$prop = 0.846 - 0.079* \log(time)$$
 
 So if we want to predict the proportion of words recalled after 500 minutes we need to evaluate:
-$$prop = 0.846 - 0.079* \ln(500)$$
-You can use a calculator to evaluate this, or `R` can do this for us (as long as we remember that the natural log in `R` is called `log`):
+$$prop = 0.846 - 0.079* \log(500)$$
+You can use a calculator to evaluate this, or `R` can do this for us:
 ```{r}
 0.846 - 0.079*log(500)
 ```
@@ -72,10 +72,10 @@ With the Mammal Gestation data in [Example 9-2](https://newonlinecourses.science
 
 Let's load the data, apply a `log` transformation to the response variable, then generate the new model.
 ```{r}
-gest <- read_csv("mammgest.csv")
-attach(gest)
-lnGestation <- log(Gestation)
-gest_NEWmodel <- lm( lnGestation ~ Birthwgt)
+gest <- read_csv("https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m6_Tutorial_Addressing_Model_Problems/mammgest.csv")
+
+lnGestation <- log(gest$Gestation)
+gest_NEWmodel <- lm( lnGestation ~ Birthwgt, data=gest)
 ```
 
 And we can verify what you saw in the reading that the spread of residuals is much better.
@@ -88,7 +88,7 @@ plot(resid(gest_NEWmodel) ~ fitted(gest_NEWmodel), main="Residual Plot, Transfor
 ## Transforming Both
 Let's use the Short Leaf data from [Example 9-3](https://newonlinecourses.science.psu.edu/stat501/lesson/9/9.3#paragraph--758) in your reading. The authors found problems with non-linearity (implying we should transform the predictor) and with the residuals (implying we should transform the response). Below we load the data, transform both variables, then generate the new model and a residual plot that should look familiar from the text.
 ```{r}
-leaf <- read_csv("shortleaf.csv")
+leaf <- read_csv("https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m6_Tutorial_Addressing_Model_Problems/shortleaf.csv")
 lnDiam <- log(leaf$Diam)
 lnVol <- log(leaf$Vol)
 leaf_NEWmodel <- lm(lnVol ~ lnDiam)
@@ -101,12 +101,12 @@ coefficients(leaf_NEWmodel)
 ```
 
 Now be careful when using this model. Remember you transformed both variables, so the model is: 
-$$\ln(Vol) = -2.872 + 2.564 *\ln(Diam)$$
+$$\log(Vol) = -2.872 + 2.564 *\log(Diam)$$
 This means that if we want to predict leaf volume for a diameter of 12 we can find:
-$$\ln(Vol) = -2.872 + 2.564 *\ln(12)$$
+$$\log(Vol) = -2.872 + 2.564 *\log(12)$$
 If we compute the right-hand side using `R` or a calculator we find:
-$$\ln(Vol)= 3.499$$
-Finally we can find the volume estimate by exponentiating both sides (to eliminate the $\ln$).
+$$\log(Vol)= 3.499$$
+Finally we can find the volume estimate by exponentiating both sides (to eliminate the $\log$).
 $$ Vol = e^{3.499} = 33.082 $$
 
 
@@ -120,9 +120,9 @@ Recall in a previous tutorial on checking assumptions we used "EPA gasoline rati
 We created a model which was significant, but we found that it failed to meet several of our assumptions. Let's try to improve it with data transformations.
 
 ```{r}
-epa <- read_csv("EPA gasoline rating 2019.csv")
-attach(epa)
-epaModel <- lm(`Cmb MPG` ~ Displ + `Veh Class`)
+epa <- read_csv("https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m6_Tutorial_Addressing_Model_Problems/EPA_gasoline_rating_2019.csv")
+
+epaModel <- lm(`Cmb MPG` ~ Displ + `Veh Class`, data=epa)
 summary(epaModel)
 ```
 
@@ -140,8 +140,8 @@ Recall our general guidelines above that when the variances are unequal and the 
 
 We will try a natural log transformation. We'll use the `log` function to transform the column, then create a new model and the residual plots from it.
 ```{r}
-lnCmbMPG <- log(`Cmb MPG`)
-epaModel_NEW <- lm(lnCmbMPG ~ Displ + `Veh Class`)
+lnCmbMPG <- log(epa$`Cmb MPG`)
+epaModel_NEW <- lm(lnCmbMPG ~ Displ + `Veh Class`, data=epa)
 plot(resid(epaModel_NEW) ~ fitted(epaModel_NEW))
 qqPlot(resid(epaModel_NEW))
 ```
@@ -152,8 +152,8 @@ However, there are still normality problems. The normal probability plot still s
 
 We can try other transformations. For instance, below I tried $y^{-1}$.
 ```{r}
-transformedCmbMPG <- (`Cmb MPG`)^(-1)
-epaModel_NEW <- lm(transformedCmbMPG ~ Displ + `Veh Class`)
+transformedCmbMPG <- (epa$`Cmb MPG`)^(-1)
+epaModel_NEW <- lm(transformedCmbMPG ~ Displ + `Veh Class`, data=epa)
 plot(resid(epaModel_NEW) ~ fitted(epaModel_NEW))
 qqPlot(resid(epaModel_NEW))
 ```
