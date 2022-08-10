@@ -1,28 +1,26 @@
 ---
 title: "Week 6 Regression Report Sample"
 output:
+  word_document: default
   pdf_document: default
   html_document: default
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, comment = NA)
+knitr::opts_chunk$set(echo = FALSE, comment = NA)
+library(tidyverse)
+library(car)
 ```
 
-For this sample report, I'll use a portion of `R`'s built-in data set `mtcars`. I created a data file with five of the variables from that set for the purposes of this sample report.
+For this sample report, I'll use a portion of R's built-in data set `mtcars`. I created a data file with five of the variables from that set for the purposes of this sample report.
 
 ## Question
 Can we predict the mpg of a car from its engine displacement, horsepower, weight, and number of gears?
 
 ## Understanding the Data
 
-We load the data set.
-```{r, message=FALSE}
-library(tidyverse)
-```
-
-
-```{r}
+After loading the data, R created the following summary.
+```{r include=FALSE}
 myData <- read_csv("carmpg.csv")
 attach(myData)
 head(myData)
@@ -33,9 +31,9 @@ head(myData)
 summary(myData)
 ```
 
-The variable `gear` only has three values which seems to suggest that we should treat it as a categorical variable, not numerical. We can tell `R` to do this by specifying that `gear` is a factor. This will tell `R` to create dummy variables when making the model.
+The variable `gear` only has three values which seems to suggest that we should treat it as a categorical variable, not numerical. We specified that gear is a factor in R.
 ```{r}
-new_gear <- factor(gear)
+gear <- as.factor(gear)
 ```
 
 We check the correlation between the other variables.
@@ -43,9 +41,9 @@ We check the correlation between the other variables.
 cor( data.frame(mpg, disp, hp, wt) )
 ```
 
-These all seem to have fairly stron linear relationships to `mpg`.
+These all seem to have fairly strong linear relationships to `mpg`.
 
-We will the scatterplots now.
+We will produce the scatterplots now.
 ```{r}
 plot(mpg ~ disp)
 plot(mpg ~ hp)
@@ -54,44 +52,49 @@ plot(mpg ~ wt)
 
 Displacement and horsepower both show some non-linearity. We will transform both and then attempt to build the model.
 
-```{r}
-new_disp <- log(disp)
-new_hp <- log(hp)
+First we transform `disp` with a log function and store this in a new variable, `log_disp`. The new scatterplot is below.
 
-plot(mpg ~ new_disp)
-plot(mpg ~ new_hp)
+```{r}
+log_disp <- log(disp)
+plot(mpg ~ log_disp, xlab="log(disp)")
 ```
 
-These scatterplots show a much more linear relationship. We check the correlation coefficients to verify:
+
+Next we transform `hp` with the log function and store this in a variable `log_hp`. The new scatterplot is below.
+
 ```{r}
-cor( data.frame(mpg, new_disp, new_hp, wt) )
+log_hp <- log(hp)
+plot(mpg ~ log_hp, xlab="log(hp)")
 ```
 
-The correlation coefficients for `mpg` with both `new_disp` and `new_hp` have increased.
+These scatterplots show a much more linear relationship. We check the correlation coefficients to verify and see the following values:
+```{r}
+cor( data.frame(mpg, log_disp, log_hp, wt) )
+```
+
+The correlation coefficients for `mpg` with both `log_disp` and `log_hp` have increased.
 
 ## Building the Model
 
-Finally we are ready to generate our first model. We will use all variables initially then use backward elimnation to remove unnecessary variables.
+Finally we are ready to generate our model. We initially use all variables then use backward elimnation to remove unnecessary variables. Our process eliminates `gear`, then `log_disp`, leaving us with the following model.
+
+
 ```{r}
-mpgModel <- lm( mpg ~ new_disp + new_hp + wt + new_gear)
+#mpgModel <- lm( mpg ~ log_disp + log_hp + wt + gear)
+#summary(mpgModel)
+```
+
+```{r}
+#mpgModel <- lm( mpg ~ log_disp + log_hp + wt)
+#summary(mpgModel)
+```
+
+```{r}
+mpgModel <- lm( mpg ~ log_hp + wt)
 summary(mpgModel)
 ```
 
-The variable `new_gear` is the least significant, so we remove it first.
-
-```{r}
-mpgModel <- lm( mpg ~ new_disp + new_hp + wt)
-summary(mpgModel)
-```
-
-The transformed displacement does not seem significant. We remove it.
-
-```{r}
-mpgModel <- lm( mpg ~ new_hp + wt)
-summary(mpgModel)
-```
-
-Both of the remaingin variables and the model overall are significant. 
+Both of the remaining variables and the model overall are significant. 
 
 ## Model Assumptions
 
@@ -101,29 +104,32 @@ We will check model assumptions to see if any more transformations are necessary
 plot(resid(mpgModel) ~ fitted(mpgModel), main="Residual vs Fitted")
 ```
 
-This is not terrible, but not perfect either. There seems to be some nonlinearity, but the variance seems roughly equal.
+There seems to be some nonlinearity, but the variance seems roughly equal. This is a somewhat worrisome plot.
+
+The qqPlot below shows several points on the large end that leave the dashed lines. This combined with the residual plot above indicates a data transformation would be helpful.
 
 ```{r, message=FALSE}
-library(car) # this library lets me make the nice plot with dashed lines
 qqPlot(resid(mpgModel))
 ```
 
-There are a several points on the large end that leave the dashed lines. This combined with the residual plot above indicates a data transformation would be helpful. We will perform a `log` transformation on the response variable.
+We will perform a `log` transformation on the response variable and create a new variable `log_mpg`. With this transformed variable, the linear model now looks like this:
 
 ```{r}
-newMpg <- log(mpg)
-new_mpgModel <- lm(newMpg ~ new_hp + wt)
+log_mpg <- log(mpg)
+new_mpgModel <- lm(log_mpg ~ log_hp + wt)
 summary(new_mpgModel)
 ```
 
-So far the model looks better with a slightly larger adjusted R-squared and even smaller p-values for several of the variables. Let's check the model assumptions with some residual plots.
+So far the model looks better with a slightly larger adjusted R-squared and even smaller p-values for several of the variables.
+
+We now check the model assumptions with some residual plots.
 
 ```{r}
 plot(resid(new_mpgModel) ~ fitted(new_mpgModel))
 qqPlot(new_mpgModel)
 ```
 
-These both seem improved. There is no more non-linearity in the residual plots. The normal-probability plot has most of the points very close to the straight line. This seems to be the best model we can construct from this dataset.
+These both seem improved. There is no more non-linearity in the residual plot. The normal-probability plot has most of the points very close to the straight line. This seems to be the best model we can construct from this dataset.
 
 ## Conclusion
 
