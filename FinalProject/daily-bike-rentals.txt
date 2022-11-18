@@ -1,0 +1,19 @@
+Bike Rentals
+
+This dataset contains information recorded daily about the weather and number of bike rentals. 
+
+dteday: The date on which the data was observed
+season: A numerically encoded value indicating the season (1:spring, 2:summer, 3:fall, 4:winter)
+yr: The year of the study in which the observation was made (the study took place over two years - year 0 represents 2011, and year 1 represents 2012)
+mnth: The calendar month in which the observation was made (1:January ... 12:December)
+holiday: A binary value indicating whether or not the observation was made on a public holiday)
+weekday: The day of the week on which the observation was made (0:Sunday ... 6:Saturday)
+workingday: A binary value indicating whether or not the day is a working day (not a weekend or holiday)
+weathersit: A categorical value indicating the weather situation (1:clear, 2:mist/cloud, 3:light rain/snow, 4:heavy rain/hail/snow/fog)
+temp: The temperature in celsius (normalized)
+atemp: The apparent ("feels-like") temperature in celsius (normalized)
+hum: The humidity level (normalized)
+windspeed: The windspeed (normalized)
+rentals: The number of bicycle rentals recorded.
+
+Source: https://github.com/MicrosoftDocs/ml-basics/blob/master/data/daily-bike-share.csv

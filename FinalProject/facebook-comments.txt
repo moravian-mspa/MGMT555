@@ -1,0 +1,21 @@
+Facebook Comments
+
+This dataset contains information about posts made on Facebook and the amount of interaction over a certain 24 period. All posts were made by an account with an associated physical location or event such as a store, museum, etc.
+
+PagePop = A page popularity score
+Checkins = Number of physical check ins at this page's associated location
+TalkingAbout = The number of people who actually come back to the page after liking the page. This include activities such as comments, likes to a post, shares, etc by visitors to the page.
+Category = Category code describing the page
+CommentsBefore = Total number of comments before the observation period began.
+CommentsFirst24 = The number of comments in the first 24 hours after the publication of post but before the observation began.
+CharsInPost = Length of the post in characters.
+NumShares = The number of people who shared this post on their timeline.
+Promoted = Whether or not the page owners paid to have the post promoted.
+DayOfWeek = Day of the week on which the post was published.
+Comments = The number of comments on the post in the 24 hour observation period. This is the target to be predicted.
+
+
+
+
+Source: Modified from http://archive.ics.uci.edu/ml/datasets/Facebook+Comment+Volume+Dataset
+Used under a CC BY 4.0 license.
