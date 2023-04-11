@@ -383,12 +383,10 @@ prediction for the selling price of a 160 year old clock?</li>
 <h2>The process</h2>
 <p>As always, I’ll begin by loading our standard helper library</p>
 <pre class="r"><code>library(tidyverse)</code></pre>
-<p>Now let’s read the data from the given data file. Use the Files tab,
-navigate to the where you downloaded the file and click it to import.
-You can look at the data in the tab that pops up. I’ll use
-<code>head</code> here to display the first few rows. I’ll also
-<code>attach</code> the data set for convenience.</p>
-<pre class="r"><code>auction &lt;- read_csv(&quot;auction.csv&quot;)</code></pre>
+<p>Now let’s read the data from the given data file using the link
+provided on Canvas. I’ll use <code>head</code> here to display the first
+few rows.</p>
+<pre class="r"><code>auction &lt;- read_csv(&quot;https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m4_Tutorial_SLR_in_R/auction.csv&quot;)</code></pre>
 <pre><code>Rows: 32 Columns: 3
 ── Column specification ────────────────────────────────────────────────────────
 Delimiter: &quot;,&quot;
@@ -586,7 +584,7 @@ if it doesn’t end up in your final report.</p>
 <h2>Brief code summary</h2>
 <pre class="r"><code>library(tidyverse)
 
-auction &lt;- read_csv(&quot;auction.csv&quot;) # load the data
+auction &lt;- read_csv(&quot;https://raw.githubusercontent.com/moravian-mspa/MGMT555/master/m4_Tutorial_SLR_in_R/auction.csv&quot;) # load the data
 plot(Price ~ Age, main=&quot;Auction Price vs Clock Age&quot;, data=auction) # make sure the scatterplot looks somewhat linear
 
 auction_lm &lt;- lm(Price ~ Age, data=auction)
